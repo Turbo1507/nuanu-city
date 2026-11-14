@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Nuanu: a city of the future by the ocean in Bali</title>
 <meta name="description" content="Nuanu is a cultural cluster on Bali's west coast. Explore UNIT. projects in Nuanu: Black Sands Oasis villas, UNIT. Space City retreat and direct rentals on unit.now.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230433ff%27/%3E%3Ccircle cx=%2722%27 cy=%2722%27 r=%273%27 fill=%27%23fff%27/%3E%3C/svg%3E">
 <link rel="preload" href="assets/fonts/hn-medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/hn-roman.woff2" as="font" type="font/woff2" crossorigin>
 <style>
@@ -59,7 +60,7 @@ i,em{font-style:normal}
 /* хиро */
 .hero{position:relative;min-height:max(640px,calc(var(--vh)*100));display:flex;align-items:flex-end;color:var(--white);background:#1d3a4a}
 .hero picture,.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,12,40,.45) 0%,rgba(6,12,40,0) 26%,rgba(6,12,40,0) 34%,rgba(6,12,40,.82) 100%)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,12,40,.62) 0%,rgba(6,12,40,.2) 14%,rgba(6,12,40,0) 28%,rgba(6,12,40,0) 34%,rgba(6,12,40,.82) 100%)}
 .hero .container{position:relative;z-index:1;padding-bottom:80px}
 .hero h1{font-size:clamp(56px,9vw,152px);line-height:.95;font-weight:500;letter-spacing:-.03em}
 .hero .h1-sub{display:block;margin-top:16px;font-size:clamp(24px,2.6vw,40px);line-height:1.15;font-weight:400;letter-spacing:-.01em}
@@ -86,7 +87,7 @@ i,em{font-style:normal}
 
 /* экосистема */
 .about{display:grid;grid-template-columns:5fr 7fr;gap:24px 80px;align-items:start;margin-bottom:56px}
-.about .h2{max-width:12ch}
+.about .h2{max-width:16ch}
 .about p{font-size:clamp(18px,1.5vw,22px);line-height:1.5;color:var(--ink)}
 .plan{border-radius:var(--r-card);overflow:clip;aspect-ratio:2/1;background:#cfd8d4}
 .plan img{width:100%;height:100%;object-fit:cover}
@@ -108,7 +109,7 @@ i,em{font-style:normal}
 .prj h3{font-size:clamp(22px,1.9vw,30px);line-height:1.15;font-weight:500;letter-spacing:-.01em}
 .prj p{margin-top:16px;font-size:16px;line-height:1.5;color:var(--ink-2)}
 .prj-link{margin-top:auto;padding-top:32px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:16px;font-weight:500;color:var(--blue)}
-.prj-link small{font-size:14px;font-weight:400;color:var(--ink-2)}
+.prj-link small{display:block;margin-top:4px;font-size:14px;font-weight:400;color:var(--ink-2)}
 .prj-link svg{flex:none;transition:transform .2s}
 .prj:hover .prj-link svg{transform:translateX(4px)}
 @media (max-width:1023px){.projects{grid-template-columns:1fr;gap:16px}.prj{display:grid;grid-template-columns:2fr 3fr}.prj-photo{aspect-ratio:auto;min-height:280px}}
@@ -116,7 +117,7 @@ i,em{font-style:normal}
 
 /* подписка */
 .sub{background:var(--blue);color:var(--white);border-radius:var(--r-card);padding:80px;display:grid;grid-template-columns:1fr 1fr;gap:40px 80px;align-items:end}
-.sub .h2{max-width:16ch}
+.sub .h2{max-width:20ch}
 .sub p{margin-top:16px;font-size:18px;line-height:1.5;max-width:560px}
 .form{display:flex;gap:8px}
 .form input{flex:1;min-width:0;height:56px;border-radius:999px;border:1px solid rgba(255,255,255,.6);background:transparent;color:var(--white);font:inherit;font-size:16px;padding:0 24px;outline:none;transition:border-color .2s,background .2s}
@@ -124,7 +125,7 @@ i,em{font-style:normal}
 .form input:focus{border-color:var(--white);background:rgba(255,255,255,.08)}
 .form .btn{background:var(--white);color:var(--ink)}
 .form .btn:hover{background:#dfe5ff}
-.form-note{margin-top:8px;font-size:14px;min-height:24px}
+.sub .form-note{margin-top:8px;font-size:14px;min-height:24px}
 @media (max-width:1023px){.sub{grid-template-columns:1fr;padding:56px 40px}}
 @media (max-width:767px){
   .sub{padding:40px 24px}
@@ -132,6 +133,16 @@ i,em{font-style:normal}
   .form{flex-direction:column}
   .form input{flex:none;width:100%}
   .form .btn{width:100%}
+}
+
+.btn:focus-visible,.dir-card:focus-visible,.prj:focus-visible,.nav a:focus-visible,.wordmark:focus-visible,.lang button:focus-visible,.ftr a:focus-visible{outline:2px solid var(--focus,#0433ff);outline-offset:3px}
+.hero :focus-visible,.hdr :focus-visible,.dir-card--mgmt:focus-visible,.dir-card--book:focus-visible,.sub :focus-visible{--focus:#fff}
+.form input[aria-invalid="true"]{border:2px solid #fff;background:rgba(255,255,255,.14)}
+
+@media (max-width:767px){
+  .lang button{min-height:40px;padding:0 14px}
+  .ftr a{display:inline-block;padding-block:12px}
+  .wordmark{padding-block:10px}
 }
 
 /* подвал */
@@ -150,7 +161,7 @@ i,em{font-style:normal}
     <nav class="nav" aria-label="Main">
       <a href="#about" data-i18n="nav_about">About Nuanu</a>
       <a href="#projects" data-i18n="nav_projects">Projects</a>
-      <a href="#subscribe" data-i18n="nav_sub">News</a>
+      <a href="#subscribe" data-i18n="nav_sub">Subscribe</a>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="ru" aria-pressed="false">RU</button>
@@ -164,7 +175,7 @@ i,em{font-style:normal}
     <picture>
       <source media="(max-width:767px)" srcset="assets/img/hero-m.jpg">
       <source media="(max-width:1279px)" srcset="assets/img/hero-s.jpg">
-      <img src="assets/img/hero.jpg" alt="Nuanu on the west coast of Bali, aerial view towards the ocean" data-i18n-alt="hero_alt" fetchpriority="high" width="2400" height="1600">
+      <img src="assets/img/hero.jpg" alt="Nuanu on the west coast of Bali, aerial view towards the ocean" data-i18n-alt="hero_alt" fetchpriority="high" width="2200" height="1467">
     </picture>
     <div class="container">
       <h1>Nuanu<span class="h1-sub" data-i18n="h1_sub">A&nbsp;city of&nbsp;the future by&nbsp;the ocean</span></h1>
@@ -203,7 +214,7 @@ i,em{font-style:normal}
           </div>
         </a>
         <a class="prj" href="https://unitspace.city">
-          <div class="prj-photo"><img src="assets/img/p-space.jpg" alt="UNIT. Space City residences among rice fields" data-i18n-alt="space_alt" width="1200" height="800" loading="lazy"></div>
+          <div class="prj-photo"><img src="assets/img/p-space.jpg" alt="UNIT. Space City building with a café, coworking and cinema" data-i18n-alt="space_alt" width="1200" height="800" loading="lazy"></div>
           <div class="prj-body">
             <h3><i class="u5">UNIT.</i> Space City</h3>
             <p data-i18n="space_p">A&nbsp;modern retreat with a&nbsp;coworking space, sauna, cinema and café surrounded by&nbsp;stunning nature.</p>
@@ -265,22 +276,22 @@ i,em{font-style:normal}
 
   var NB=' ';
   var RU={
-    nav_about:'О Нуану',
+    nav_about:'О Nuanu',
     nav_projects:'Проекты',
-    nav_sub:'Новости',
-    hero_alt:'Нуану на западном побережье Бали, вид с воздуха на океан',
+    nav_sub:'Подписка',
+    hero_alt:'Nuanu на западном побережье Бали, вид с воздуха на океан',
     h1_sub:'Город будущего у'+NB+'океана',
     hero_p:'Культурный кластер на'+NB+'западном побережье Бали с'+NB+'единым архитектурным планом и'+NB+'собственной инфраструктурой. Школы, арт-объекты, спа-комплекс, ботанические пространства и'+NB+'рестораны. Готовая среда для жизни и'+NB+'ограниченное предложение для инвесторов.',
     hero_cta1:'Смотреть проекты <i class="u5">UNIT.</i>',
     hero_cta2:'Получить закрытые предложения',
     about_h2:'Экосистема, а'+NB+'не'+NB+'просто адрес',
     about_p:'Nuanu задуман как пространство, где инновации встречаются с'+NB+'природой. Это локация, где удобно жить самому и'+NB+'куда охотно возвращаются гости. Здесь сохраняется ощущение тишины и'+NB+'приватности, но'+NB+'при этом в'+NB+'шаговой доступности есть всё необходимое для работы, отдыха и'+NB+'инвестиций с'+NB+'прогнозируемым ростом стоимости.',
-    plan_alt:'Мастер-план Нуану у'+NB+'океана',
+    plan_alt:'Мастер-план Nuanu у'+NB+'океана',
     prj_h2:'Исследуйте проекты <i class="u5">UNIT.</i> в'+NB+'Nuanu',
     bso_alt:'Вилла Black Sands Oasis с'+NB+'собственным бассейном',
     bso_p:'Виллы в'+NB+'стиле Desert Modernism: <i class="nw">6-метровые</i> потолки, натуральные материалы, приватные сады и'+NB+'бассейны.',
     bso_cta:'Выбрать виллу',
-    space_alt:'Резиденции UNIT. Space City среди рисовых полей',
+    space_alt:'Здание UNIT. Space City с'+NB+'кафе, коворкингом и'+NB+'кинотеатром',
     space_p:'Современный ретрит с'+NB+'коворкингом, сауной, кинотеатром и'+NB+'кафе в'+NB+'окружении красивейшей природы.',
     space_cta:'Посмотреть ретрит',
     now_alt:'Терраса резиденции с'+NB+'видом на'+NB+'поля',
@@ -293,9 +304,11 @@ i,em{font-style:normal}
     sub_ph:'Ваш email',
     sub_btn:'Подписаться',
     ok:'Спасибо! Напишем, как только откроем доступ.',
+    off:'Подписка заработает в'+NB+'ближайшие дни. Загляните чуть позже.',
+    fail:'Не'+NB+'получилось отправить. Попробуйте ещё раз через минуту.',
     bad:'Проверьте адрес: в'+NB+'нём должна быть @ и'+NB+'домен.'
   };
-  var EN={ok:'Thank you! We will write as soon as access opens.',bad:'Check the address: it needs an @ and a domain.'};
+  var EN={ok:'Thank you! We will write as soon as access opens.',off:'Sign-up opens in the coming days. Please check back soon.',fail:'Could not send. Please try again in a minute.',bad:'Check the address: it needs an @ and a domain.'};
   document.querySelectorAll('[data-i18n]').forEach(function(el){EN[el.dataset.i18n]=el.innerHTML});
   document.querySelectorAll('[data-i18n-alt]').forEach(function(el){EN[el.dataset.i18nAlt]=el.alt});
   document.querySelectorAll('[data-i18n-ph]').forEach(function(el){EN[el.dataset.i18nPh]=el.placeholder});
@@ -306,7 +319,14 @@ i,em{font-style:normal}
     document.querySelectorAll('[data-i18n-alt]').forEach(function(el){var v=d[el.dataset.i18nAlt];if(v!=null)el.alt=v});
     document.querySelectorAll('[data-i18n-ph]').forEach(function(el){var v=d[el.dataset.i18nPh];if(v!=null)el.placeholder=v});
     root.lang=lang;
+    glue();
     document.querySelectorAll('.lang button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===lang)});
+  }
+  // короткие предлоги и союзы не висят в конце строки: клеим к следующему слову
+  function glue(){
+    var re=root.lang==='ru'?/(^|[\s\u00a0(«])(в|и|к|с|о|у|а|я|на|по|от|до|за|из|не|но|для|без|над|под|при|про|об|во|со|же|ли) /gi:/(^|[\s\u00a0(])(a|an|the|to) /gi;
+    var tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){return /SCRIPT|STYLE/.test(n.parentNode.nodeName)?2:1}});
+    for(var n;(n=tw.nextNode());){var v=n.data.replace(re,'$1$2\u00a0').replace(re,'$1$2\u00a0');if(v!==n.data)n.data=v}
   }
   document.querySelectorAll('.lang button').forEach(function(b){
     b.addEventListener('click',function(){
@@ -316,6 +336,7 @@ i,em{font-style:normal}
   });
   var m=document.cookie.match(/(?:^|; )unit_lang=([^;]+)/);
   if(m&&m[1]==='ru')apply('ru');
+  else glue();
 
   var form=document.getElementById('subForm'),note=document.getElementById('subNote'),inp=document.getElementById('subEmail');
   form.addEventListener('submit',function(e){
@@ -324,8 +345,10 @@ i,em{font-style:normal}
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){note.textContent=d.bad;inp.setAttribute('aria-invalid','true');inp.focus();return}
     inp.removeAttribute('aria-invalid');
     var ep=form.dataset.endpoint;
-    if(ep){fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,source:'nuanu.city',lang:cur})}).catch(function(){})}
-    note.textContent=d.ok; form.reset();
+    if(!ep){note.textContent=d.off;return}
+    fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,source:'nuanu.city',lang:cur})})
+      .then(function(r){if(!r.ok)throw 0;note.textContent=d.ok;form.reset()})
+      .catch(function(){note.textContent=d.fail});
   });
 })();
 </script>
