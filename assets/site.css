@@ -177,3 +177,18 @@ ul{list-style:none}
 /* фокус с клавиатуры */
 :focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 .hdr :focus-visible,.hero :focus-visible,.sub :focus-visible{outline-color:var(--white)}
+
+/* состояния: наведение (только мышь), нажатие (везде, и на телефоне), фокус с клавиатуры — у каждой кнопки и ссылки */
+html{-webkit-tap-highlight-color:transparent}
+.btn{transition:background-color .2s,color .2s,border-color .2s,transform .12s ease-out;touch-action:manipulation;user-select:none}
+.btn:active{transform:scale(.97)}
+@media (hover:hover){
+  .btn-white:hover{background:#e3e9ff}
+}
+.btn-blue:active,.btn-sm:active{background:#0228cc}
+.btn-ghost:active{background:rgba(255,255,255,.85);color:var(--ink);border-color:transparent}
+.btn-white:active{background:#cbd6ff}
+.nav a:active,.wordmark:active,.lang-dd-btn:active{opacity:.6}
+.lang-dd-list a:active{color:var(--blue);background:var(--grey)}
+.ftr-links a:active{color:var(--blue)}
+@media (prefers-reduced-motion:reduce){.btn:active{transform:none}}
