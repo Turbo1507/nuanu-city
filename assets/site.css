@@ -275,3 +275,7 @@ html{-webkit-tap-highlight-color:transparent}
 .form .btn[disabled]{opacity:.7;cursor:progress}
 @media (max-width:399px){.chips li{padding:0 8px;font-size:12px;line-height:12px}}
 .pchip.is-off{display:none}
+/* телефон: места плавно сменяются группами */
+.pchip{transition:opacity .5s ease,visibility .5s}
+.pchip.is-hid{opacity:0;visibility:hidden}
+@media (prefers-reduced-motion:reduce){.pchip{transition:none}}

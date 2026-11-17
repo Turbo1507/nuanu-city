@@ -128,47 +128,91 @@
   addEventListener('scroll', upd, { passive: true }); upd();
 })();
 
-// чипы плана: каждый ищет свободное место — над точкой, выше на длинной ножке, под точкой, со сдвигом в сторону;
-// внутри плана и без наложений. Порядок важности: проекты, потом места. Прячем, только если не нашлось ни одного места.
+// чипы плана. Десктоп: каждый ищет свободное место — над точкой, выше на длинной ножке, под точкой, со сдвигом.
+// Телефон (до 768): BSO и Space City видны всегда, места сменяются группами по 3 раз в 3 с; в группе никто ни на кого не налезает.
 (function () {
   var plan = document.querySelector('.plan'); if (!plan) return;
   var chips = [].slice.call(plan.querySelectorAll('.pchip')), lastW = 0;
   var P = ['luna', 'school', 'rest', 'aurora', 'gallery', 'retreat', 'cave', 'shop', 'alpaca'];
-  var rank = function (c) { return c.classList.contains('pchip-unit') || c.classList.contains('pchip-bso') ? -1 : P.indexOf(c.dataset.k); };
+  var isProj = function (c) { return c.classList.contains('pchip-unit') || c.classList.contains('pchip-bso'); };
+  var rank = function (c) { return isProj(c) ? -1 : P.indexOf(c.dataset.k); };
   var order = chips.slice().sort(function (a, b) { return rank(a) - rank(b); });
-  function fit() {
-    chips.forEach(function (c) { c.style.setProperty('--dx', '0px'); c.style.setProperty('--lift', '0px'); c.classList.remove('is-below', 'is-off'); });
-    var pr = plan.getBoundingClientRect(), box = plan.querySelector('.pchips').getBoundingClientRect(), m = 6, gap = 4;
-    var kept = [];
-    var free = function (L, T, w, h) {
-      if (L < pr.left + m || L + w > pr.right - m || T < pr.top + m || T + h > pr.bottom - m) return false;
-      return !kept.some(function (q) { return L < q.r + gap && q.l < L + w + gap && T < q.b + gap && q.t < T + h + gap; });
-    };
-    var plans = order.map(function (c) {
+  var phone = matchMedia('(max-width:767px)'), still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var groups = [], gi = 0, timer = 0, seen = false;
+
+  function measure() {
+    chips.forEach(function (c) { c.style.setProperty('--dx', '0px'); c.style.setProperty('--lift', '0px'); c.classList.remove('is-below', 'is-off', 'is-hid'); });
+    var pr = plan.getBoundingClientRect(), box = plan.querySelector('.pchips').getBoundingClientRect();
+    return { pr: pr, list: order.map(function (c) {
       var r = c.getBoundingClientRect(), cs = getComputedStyle(c);
-      if (!r.width) return null;
-      var ax = box.left + parseFloat(cs.left), ay = box.top + parseFloat(cs.top), stem = ay - r.bottom, w = r.width, h = r.height;
-      return { c: c, ax: ax, ay: ay, stem: stem, w: w, h: h };
-    });
-    plans.forEach(function (o) {
-      if (!o) return;
-      var step = o.h + 4, lim = o.w / 2 - 10, dxs = [0, -o.w * .3, o.w * .3, -lim, lim], best = null;
-      var tries = [[0, 0], [0, 1], [1, 0], [0, 2], [1, 1], [0, 3], [1, 2], [0, 4], [0, 5], [1, 3]];
-      for (var t = 0; t < tries.length && !best; t++) {
-        var below = tries[t][0], lift = tries[t][1] * step;
-        var T = below ? o.ay + o.stem + lift : o.ay - o.stem - lift - o.h;
-        for (var k = 0; k < dxs.length; k++) {
-          var L = o.ax - o.w / 2 + dxs[k];
-          if (free(L, T, o.w, o.h)) { best = { below: below, lift: lift, dx: dxs[k], L: L, T: T }; break; }
-        }
+      return { c: c, ax: box.left + parseFloat(cs.left), ay: box.top + parseFloat(cs.top), stem: (box.top + parseFloat(cs.top)) - r.bottom, w: r.width, h: r.height };
+    }) };
+  }
+  function inside(pr, L, T, w, h, m) { return L >= pr.left + m && L + w <= pr.right - m && T >= pr.top + m && T + h <= pr.bottom - m; }
+  function clash(kept, L, T, w, h, gap) { return kept.some(function (q) { return L < q.r + gap && q.l < L + w + gap && T < q.b + gap && q.t < T + h + gap; }); }
+  function put(o, best) {
+    o.c.classList.toggle('is-below', !!best.below);
+    o.c.style.setProperty('--lift', best.lift + 'px');
+    o.c.style.setProperty('--dx', best.dx.toFixed(1) + 'px');
+    return { l: best.L, t: best.T, r: best.L + o.w, b: best.T + o.h };
+  }
+  // место для подписи: перебор вариантов, первый свободный
+  function find(o, pr, kept, tries) {
+    var step = o.h + 4, lim = o.w / 2 - 7, dxs = [0, -o.w * .3, o.w * .3, -lim, lim];
+    for (var t = 0; t < tries.length; t++) {
+      var below = tries[t][0], lift = tries[t][1] * step, T = below ? o.ay + o.stem + lift : o.ay - o.stem - lift - o.h;
+      for (var k = 0; k < dxs.length; k++) {
+        var L = o.ax - o.w / 2 + dxs[k];
+        if (inside(pr, L, T, o.w, o.h, 6) && !clash(kept, L, T, o.w, o.h, 4)) return { below: below, lift: lift, dx: dxs[k], L: L, T: T };
       }
+    }
+    return null;
+  }
+
+  function desktop() {
+    var g = measure(), kept = [];
+    g.list.forEach(function (o) {
+      if (!o.w) return;
+      var best = find(o, g.pr, kept, [[0, 0], [0, 1], [1, 0], [0, 2], [1, 1], [0, 3], [1, 2], [0, 4], [0, 5], [1, 3]]);
       if (!best) { o.c.classList.add('is-off'); return; }
-      o.c.classList.toggle('is-below', !!best.below);
-      o.c.style.setProperty('--lift', best.lift + 'px');
-      o.c.style.setProperty('--dx', best.dx.toFixed(1) + 'px');
-      kept.push({ l: best.L, t: best.T, r: best.L + o.w, b: best.T + o.h });
+      kept.push(put(o, best));
     });
   }
+
+  function mobile() {
+    var g = measure(), fixed = [], short = [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2]];
+    groups = [];
+    g.list.forEach(function (o) {
+      if (!o.w) return;
+      if (isProj(o.c)) { var b = find(o, g.pr, fixed, short); if (b) fixed.push(put(o, b)); return; }
+      // в первую группу, где хватает места и меньше 3 меток; иначе новая группа
+      for (var i = 0; i <= groups.length; i++) {
+        if (!groups[i]) groups[i] = { items: [], rects: [] };
+        var G = groups[i]; if (G.items.length >= 3) continue;
+        var best = find(o, g.pr, fixed.concat(G.rects), short);
+        if (best) { G.items.push({ o: o, best: best }); G.rects.push({ l: best.L, t: best.T, r: best.L + o.w, b: best.T + o.h }); return; }
+        if (!G.items.length) { groups.pop(); o.c.classList.add('is-off'); return; } // места нет даже в пустой группе
+      }
+    });
+    groups = groups.filter(function (G) { return G.items.length; });
+    groups.forEach(function (G, i) { G.items.forEach(function (it) { put(it.o, it.best); it.o.c.dataset.g = i; it.o.c.classList.add('is-hid'); }); });
+    gi = 0; show();
+  }
+  function show() {
+    groups.forEach(function (G, i) { G.items.forEach(function (it) { it.o.c.classList.toggle('is-hid', i !== gi); }); });
+  }
+  // сначала гаснет текущая группа, потом проявляется следующая — полупрозрачные метки не встречаются
+  function tick() { if (groups.length < 2) return; groups[gi].items.forEach(function (it) { it.o.c.classList.add('is-hid'); }); gi = (gi + 1) % groups.length; setTimeout(show, 550); }
+  function run() {
+    clearInterval(timer); timer = 0;
+    if (!phone.matches || still || document.hidden || !seen || groups.length < 2) return;
+    timer = setInterval(tick, 3000);
+  }
+  function fit() { if (phone.matches) mobile(); else { groups = []; desktop(); } run(); }
+
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { seen = e[0].isIntersecting; run(); }).observe(plan);
+  else seen = true;
+  document.addEventListener('visibilitychange', run);
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(fit);
   addEventListener('load', fit);
   addEventListener('resize', function () { if (innerWidth !== lastW) { lastW = innerWidth; requestAnimationFrame(fit); } });
