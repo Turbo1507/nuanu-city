@@ -12,3 +12,9 @@ export const CAPS = {
   nl: ['Nuanu van bovenaf, westkust van Bali', 'Villa van Black Sands Oasis', `${U} Space City tussen de rijstvelden`]
 };
 export const GAL = { en: 'Photos', ru: 'Фото', id: 'Foto', fr: 'Photos', es: 'Fotos', uk: 'Фото', it: 'Foto', tr: 'Fotoğraflar', nl: 'Foto’s' };
+// стрелки слайдера в карточках проектов (только для читалок)
+export const ARR = {
+  en: ['Previous photo', 'Next photo'], ru: ['Предыдущее фото', 'Следующее фото'], id: ['Foto sebelumnya', 'Foto berikutnya'],
+  fr: ['Photo précédente', 'Photo suivante'], es: ['Foto anterior', 'Foto siguiente'], uk: ['Попереднє фото', 'Наступне фото'],
+  it: ['Foto precedente', 'Foto successiva'], tr: ['Önceki fotoğraf', 'Sonraki fotoğraf'], nl: ['Vorige foto', 'Volgende foto']
+};

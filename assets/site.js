@@ -79,9 +79,41 @@
   p.scrollLeft = (p.scrollWidth - p.clientWidth) / 2;
 })();
 
-// план на телефоне листается вбок: стартуем с середины, где основные локации
+// «Экосистема»: блок текста ужимается по самой длинной строке, чтобы её край совпал с правым краем плана (≥1200)
 (function () {
-  var p = document.querySelector('.plan');
-  if (!p || p.scrollWidth <= p.clientWidth) return;
-  p.scrollLeft = (p.scrollWidth - p.clientWidth) / 2;
+  var p = document.querySelector('.about p'); if (!p) return;
+  var mq = matchMedia('(min-width:1200px)'), lastW = 0;
+  function fit() {
+    p.style.width = '';
+    if (!mq.matches) return;
+    var r = document.createRange(); r.selectNodeContents(p);
+    var box = p.getBoundingClientRect(), right = 0;
+    [].forEach.call(r.getClientRects(), function (x) { if (x.right > right) right = x.right; });
+    if (right) p.style.width = Math.ceil(right - box.left) + 'px';
+  }
+  function onW() { if (innerWidth !== lastW) { lastW = innerWidth; fit(); } }
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(onW);
+  addEventListener('resize', onW);
+})();
+
+// слайдер фото в карточках проектов: свайп и трекпад — нативная прокрутка, точки и стрелки — прокрутка к кадру
+(function () {
+  [].forEach.call(document.querySelectorAll('.prj-gal'), function (g) {
+    var t = g.querySelector('.gal-track'), n = t.children.length, dots = g.querySelector('.gal-dots');
+    var prev = g.querySelector('.gal-prev'), next = g.querySelector('.gal-next');
+    var label = dots.getAttribute('aria-label') || '', cur = -1;
+    dots.innerHTML = [].map.call(t.children, function (_, i) { return '<button type="button" data-i="' + i + '" aria-label="' + label + ' ' + (i + 1) + ' / ' + n + '"></button>'; }).join('');
+    function go(i) { t.scrollTo({ left: Math.max(0, Math.min(n - 1, i)) * t.clientWidth, behavior: 'smooth' }); }
+    function sync() {
+      var i = Math.round(t.scrollLeft / (t.clientWidth || 1));
+      if (i === cur) return; cur = i;
+      [].forEach.call(dots.children, function (b, k) { if (k === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+      prev.disabled = i <= 0; next.disabled = i >= n - 1;
+    }
+    t.addEventListener('scroll', function () { requestAnimationFrame(sync); }, { passive: true });
+    dots.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) go(+b.dataset.i); });
+    prev.addEventListener('click', function () { go(cur - 1); });
+    next.addEventListener('click', function () { go(cur + 1); });
+    sync();
+  });
 })();

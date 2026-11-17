@@ -1,5 +1,5 @@
 // Типограф: короткие слова не висят в конце строки (как у unithotels)
-const KEEP = new Set(['где', 'что', 'кто', 'это', 'как', 'де', 'що', 'хто', 'як']);
+const KEEP = new Set(['где', 'что', 'кто', 'это', 'как', 'де', 'що', 'хто', 'як', 'pas']);
 export function glue(s, l) {
   const g = t => t.replace(/(^|[\s>(« ])([\p{L}\d]{1,3})\.? (?=[\p{L}\d(«<])/gu, (m, a, w) => KEEP.has(w.toLowerCase()) ? m : m.slice(0, -1) + ' ');
   s = g(g(s));

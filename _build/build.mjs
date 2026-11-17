@@ -6,8 +6,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { LANGS, NATIVE, LOCALE, T } from './i18n-texts.mjs';
 import { glue } from './glue.mjs';
-import { CAPS, GAL } from './caps.mjs';
-import { PINS, UNIT_PIN, PT } from './plan.mjs';
+import { CAPS, GAL, ARR } from './caps.mjs';
+import { PINS, UNIT_PIN, BSO_PIN, PT } from './plan.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = (process.argv[2] || 'https://turbo1507.github.io/nuanu-city/').replace(/\/?$/, '/');
@@ -94,13 +94,14 @@ ${['hero', 'hero2', 'hero3'].map((h, i) => `      <div class="hero-slide${i ? ''
   <section class="sec" id="about">
     <div class="container">
       <div class="about">
-        <h2 class="t h2">${d.about_h2}</h2>
+        <h2 class="t h2">${d.about_h2.replace(/^(.+?,)[  ](.+)$/, '<span class="ln">$1</span> <span class="ln">$2</span>')}</h2>
         <p class="t">${d.about_p}</p>
       </div>
       <div class="plan"><div class="plan-canvas">
         <img src="${R}assets/img/plan.webp" srcset="${R}assets/img/plan-s.webp 1200w, ${R}assets/img/plan.webp 2400w" sizes="(max-width:1599px) 100vw, 1600px" alt="${attr(plain(d.plan_alt))}" width="2400" height="1200" loading="lazy">
         <ul class="pchips" aria-label="${attr(PT[l].label)}">
 ${PINS.map(p => `          <li class="pchip${p.m ? '' : ' pchip-d'}${p.w ? ' pchip-w' : ''}" style="--x:${p.x};--y:${p.y}">${glue(PT[l][p.k], l)}</li>`).join('\n')}
+          <li class="pchip pchip-unit" style="--x:${BSO_PIN.x};--y:${BSO_PIN.y}">Black Sands Oasis</li>
           <li class="pchip pchip-unit" style="--x:${UNIT_PIN.x};--y:${UNIT_PIN.y}">${U} Space City</li>
         </ul>
       </div></div>
@@ -112,7 +113,11 @@ ${PINS.map(p => `          <li class="pchip${p.m ? '' : ' pchip-d'}${p.w ? ' pch
       <h2 class="t h2">${d.prj_h2}</h2>
       <div class="prj-list">
 ${prj.map(([href, dom, img, h, title, k]) => `        <article class="prj">
-          <div class="prj-photo"><img src="${R}assets/img/${img}.webp" alt="${attr(plain(d[k + '_alt']))}" width="900" height="${h}" loading="lazy"></div>
+          <div class="prj-photo prj-gal">
+            <div class="gal-track"><img src="${R}assets/img/${img}.webp" alt="${attr(plain(d[k + '_alt']))}" width="900" height="${h}" loading="lazy"><img src="${R}assets/img/${img}-2.webp" alt="" width="900" height="640" loading="lazy"><img src="${R}assets/img/${img}-3.webp" alt="" width="900" height="640" loading="lazy"></div>
+            <button class="gal-arr gal-prev" type="button" aria-label="${attr(ARR[l][0])}"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="gal-arr gal-next" type="button" aria-label="${attr(ARR[l][1])}"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="gal-dots" role="group" aria-label="${attr(GAL[l])}"></div>
+          </div>
           <div class="prj-body">
             <span class="t prj-dom">${dom}</span>
             <h3 class="t">${title}</h3>

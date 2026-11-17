@@ -12,6 +12,7 @@ export const PINS = [
   { k: 'cave', x: 36.99, y: 68.95 }
 ];
 export const UNIT_PIN = { x: 75.7, y: 19.7 }; // UNIT. Space City
+export const BSO_PIN = { x: 21.23, y: 20.8 }; // Black Sands Oasis: точка с сайта BSO (window.BSO_NUANU_BADGE_PIN), тот же план
 export const PT = {
   en: { label: 'Locations on the Nuanu master plan', school: 'International school', gallery: 'Art gallery', alpaca: 'Alpaca park', aurora: 'Aurora media park', rest: 'Restaurants', shop: 'Shopping center', luna: 'Luna Beach Club', retreat: 'Retreat center', cave: 'Pool in the Utopia cave' },
   ru: { label: 'Локации на мастер‑плане Nuanu', school: 'Международная школа', gallery: 'Арт‑галерея', alpaca: 'Альпака‑парк', aurora: 'Медиапарк Aurora', rest: 'Рестораны', shop: 'Торговый центр', luna: 'Luna Beach Club', retreat: 'Ретритный центр', cave: 'Бассейн в пещере Utopia' },
