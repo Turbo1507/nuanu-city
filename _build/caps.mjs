@@ -1,15 +1,15 @@
 // Подписи к фото галереи первого экрана (правый нижний угол, как у UNIT.FURNITURE), 9 языков
 const U = '<i class="u5">UNIT.</i>';
 export const CAPS = {
-  en: ['Nuanu from above, west coast of Bali', 'Black Sands Oasis villa', `${U} Space City among the rice fields`],
-  ru: ['Nuanu с высоты, западное побережье Бали', 'Вилла Black Sands Oasis', `${U} Space City среди рисовых полей`],
-  id: ['Nuanu dari udara, pantai barat Bali', 'Vila Black Sands Oasis', `${U} Space City di tengah sawah`],
-  fr: ['Nuanu vu du ciel, côte ouest de Bali', 'Villa Black Sands Oasis', `${U} Space City au milieu des rizières`],
-  es: ['Nuanu desde el aire, costa oeste de Bali', 'Villa Black Sands Oasis', `${U} Space City entre arrozales`],
-  uk: ['Nuanu з висоти, західне узбережжя Балі', 'Вілла Black Sands Oasis', `${U} Space City серед рисових полів`],
-  it: ['Nuanu dall’alto, costa occidentale di Bali', 'Villa Black Sands Oasis', `${U} Space City tra le risaie`],
-  tr: ['Havadan Nuanu, Bali’nin batı kıyısı', 'Black Sands Oasis villası', `Pirinç tarlaları arasında ${U} Space City`],
-  nl: ['Nuanu van bovenaf, westkust van Bali', 'Villa van Black Sands Oasis', `${U} Space City tussen de rijstvelden`]
+  en: ['Nuanu from above, west coast of Bali', 'Nuanu coastline at sunset', 'Bamboo restaurant in Nuanu'],
+  ru: ['Nuanu с высоты, западное побережье Бали', 'Побережье Nuanu на закате', 'Ресторан из бамбука в Nuanu'],
+  id: ['Nuanu dari udara, pantai barat Bali', 'Pesisir Nuanu saat matahari terbenam', 'Restoran bambu di Nuanu'],
+  fr: ['Nuanu vu du ciel, côte ouest de Bali', 'Le littoral de Nuanu au coucher du soleil', 'Restaurant en bambou à Nuanu'],
+  es: ['Nuanu desde el aire, costa oeste de Bali', 'La costa de Nuanu al atardecer', 'Restaurante de bambú en Nuanu'],
+  uk: ['Nuanu з висоти, західне узбережжя Балі', 'Узбережжя Nuanu на заході сонця', 'Ресторан із бамбука в Nuanu'],
+  it: ['Nuanu dall’alto, costa occidentale di Bali', 'La costa di Nuanu al tramonto', 'Ristorante di bambù a Nuanu'],
+  tr: ['Havadan Nuanu, Bali’nin batı kıyısı', 'Gün batımında Nuanu kıyısı', 'Nuanu’da bambu restoran'],
+  nl: ['Nuanu van bovenaf, westkust van Bali', 'De kust van Nuanu bij zonsondergang', 'Bamboerestaurant in Nuanu']
 };
 export const GAL = { en: 'Photos', ru: 'Фото', id: 'Foto', fr: 'Photos', es: 'Fotos', uk: 'Фото', it: 'Foto', tr: 'Fotoğraflar', nl: 'Foto’s' };
 // стрелки слайдера в карточках проектов (только для читалок)
