@@ -71,3 +71,17 @@
   document.addEventListener('visibilitychange', run);
   run();
 })();
+
+// план на телефоне листается вбок: стартуем с середины, где основные локации
+(function () {
+  var p = document.querySelector('.plan');
+  if (!p || p.scrollWidth <= p.clientWidth) return;
+  p.scrollLeft = (p.scrollWidth - p.clientWidth) / 2;
+})();
+
+// план на телефоне листается вбок: стартуем с середины, где основные локации
+(function () {
+  var p = document.querySelector('.plan');
+  if (!p || p.scrollWidth <= p.clientWidth) return;
+  p.scrollLeft = (p.scrollWidth - p.clientWidth) / 2;
+})();

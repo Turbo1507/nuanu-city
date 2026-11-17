@@ -214,3 +214,22 @@ html{-webkit-tap-highlight-color:transparent}
 @media (max-width:1023px){.hero-caps{display:none}}
 @media (max-width:599px){.hero-dots{display:none}}
 @media (prefers-reduced-motion:reduce){.hero-slide,.hero-cap{transition:none}}
+
+/* локации на мастер-плане: координаты как на сайте UNIT. Space City; чип над точкой со стеблем; UNIT. Space City синим */
+.plan{position:relative}
+.plan-canvas{position:absolute;inset:0;container-type:inline-size}
+.plan-canvas img{position:absolute;inset:0}
+.pchips{position:absolute;inset:0;pointer-events:none}
+.pchip{--stem:clamp(10px,1.4cqw,20px);position:absolute;left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);transform:translate(-50%,calc(-100% - var(--stem)));padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.92);color:var(--ink);font-size:clamp(11px,.95cqw,14px);font-weight:500;line-height:1.15;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.18)}
+.pchip::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:var(--stem);background:rgba(255,255,255,.92)}
+.pchip::before{content:"";position:absolute;left:50%;top:calc(100% + var(--stem) - 3px);width:6px;height:6px;margin-left:-2.5px;border-radius:50%;background:var(--white);box-shadow:0 0 0 2px rgba(0,0,0,.18)}
+.pchip-unit{background:var(--blue);color:var(--white)}
+/* телефон: план листается вбок, как у Space City; видны главные локации */
+@media (max-width:599px){
+  .plan{height:246px;aspect-ratio:auto;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
+  .plan::-webkit-scrollbar{display:none}
+  .plan-canvas{position:relative;inset:auto;width:492px;height:100%}
+  .pchip-d{display:none}
+}
+/* на узком плане альпака-парк налезает на медиапарк — показываем его только от 1200 */
+@media (max-width:1199px){.pchip-w{display:none}}
