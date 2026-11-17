@@ -6,6 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { LANGS, NATIVE, LOCALE, T } from './i18n-texts.mjs';
 import { glue } from './glue.mjs';
+import { CAPS, GAL } from './caps.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = (process.argv[2] || 'https://turbo1507.github.io/nuanu-city/').replace(/\/?$/, '/');
@@ -21,6 +22,7 @@ const BRAND = `${U} in Nuanu`;
 function page(l) {
   const d = Object.fromEntries(Object.entries(T[l]).map(([k, v]) => [k, glue(v, l)]));
   const R = l === 'en' ? '' : '../';
+  const caps = CAPS[l].map(c => glue(c, l));
   const langs = LANGS.map(x => `<li><a href="${R}${x === 'en' ? '' : x + '/'}" hreflang="${x}" lang="${x}"${x === l ? ' aria-current="true"' : ''}>${NATIVE[x]}</a></li>`).join('');
   const prj = [
     ['https://blacksandsoasis.com', 'blacksandsoasis.com', 'p-bso', 585, 'Black Sands Oasis', 'bso'],
@@ -69,12 +71,12 @@ ${l === 'en' ? `<script>(function(){var L=/^(${LANGS.join('|')})$/;if(/bot|crawl
 
 <main id="top">
   <section class="hero">
-    <picture>
-      <source media="(max-width:599px)" srcset="${R}assets/img/hero-m.webp" type="image/webp">
-      <source media="(max-width:1279px)" srcset="${R}assets/img/hero-t.webp" type="image/webp">
-      <source srcset="${R}assets/img/hero.webp" type="image/webp">
-      <img src="${R}assets/img/hero.jpg" alt="${attr(plain(d.hero_alt))}" fetchpriority="high" width="2200" height="1467">
-    </picture>
+    <div class="hero-media">
+${['hero', 'hero2', 'hero3'].map((h, i) => `      <div class="hero-slide${i ? '' : ' on'}"><picture>
+        <source media="(max-width:599px)" srcset="${R}assets/img/${h}-m.webp" type="image/webp">
+        <img src="${R}assets/img/${h}.webp" alt="${attr(plain(i ? caps[i] : d.hero_alt))}"${i ? ' loading="lazy"' : ' fetchpriority="high"'} width="2200" height="1467">
+      </picture></div>`).join('\n')}
+    </div>
     <div class="container hero-in">
       <h1 class="t">Nuanu</h1>
       <p class="t h1-sub">${d.h1_sub}</p>
@@ -84,6 +86,8 @@ ${l === 'en' ? `<script>(function(){var L=/^(${LANGS.join('|')})$/;if(/bot|crawl
         <a class="btn btn-ghost" href="#subscribe">${d.hero_cta2}</a>
       </div>
     </div>
+    <div class="hero-caps">${caps.map((c, i) => `<p class="hero-cap${i ? '' : ' on'}"${i ? ' aria-hidden="true"' : ''}>${c}</p>`).join('')}</div>
+    <div class="hero-dots" role="group" aria-label="${attr(GAL[l])}"></div>
   </section>
 
   <section class="sec" id="about">

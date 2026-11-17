@@ -26,7 +26,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230433ff%27/%3E%3Ccircle cx=%2722%27 cy=%2722%27 r=%273%27 fill=%27%23fff%27/%3E%3C/svg%3E">
 <link rel="preload" href="../assets/fonts/hn-medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/hn-roman.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/site.css?v=mwl1orr8">
+<link rel="stylesheet" href="../assets/site.css?v=mwl21sem">
 
 </head>
 <body>
@@ -48,12 +48,20 @@
 
 <main id="top">
   <section class="hero">
-    <picture>
-      <source media="(max-width:599px)" srcset="../assets/img/hero-m.webp" type="image/webp">
-      <source media="(max-width:1279px)" srcset="../assets/img/hero-t.webp" type="image/webp">
-      <source srcset="../assets/img/hero.webp" type="image/webp">
-      <img src="../assets/img/hero.jpg" alt="Nuanu на західному узбережжі Балі, вид із повітря на океан" fetchpriority="high" width="2200" height="1467">
-    </picture>
+    <div class="hero-media">
+      <div class="hero-slide on"><picture>
+        <source media="(max-width:599px)" srcset="../assets/img/hero-m.webp" type="image/webp">
+        <img src="../assets/img/hero.webp" alt="Nuanu на західному узбережжі Балі, вид із повітря на океан" fetchpriority="high" width="2200" height="1467">
+      </picture></div>
+      <div class="hero-slide"><picture>
+        <source media="(max-width:599px)" srcset="../assets/img/hero2-m.webp" type="image/webp">
+        <img src="../assets/img/hero2.webp" alt="Вілла Black Sands Oasis" loading="lazy" width="2200" height="1467">
+      </picture></div>
+      <div class="hero-slide"><picture>
+        <source media="(max-width:599px)" srcset="../assets/img/hero3-m.webp" type="image/webp">
+        <img src="../assets/img/hero3.webp" alt="UNIT. Space City серед рисових полів" loading="lazy" width="2200" height="1467">
+      </picture></div>
+    </div>
     <div class="container hero-in">
       <h1 class="t">Nuanu</h1>
       <p class="t h1-sub">Місто майбутнього біля океану</p>
@@ -63,6 +71,8 @@
         <a class="btn btn-ghost" href="#subscribe">Отримати закриті пропозиції</a>
       </div>
     </div>
+    <div class="hero-caps"><p class="hero-cap on">Nuanu з висоти, західне узбережжя Балі</p><p class="hero-cap" aria-hidden="true">Вілла Black Sands Oasis</p><p class="hero-cap" aria-hidden="true"><i class="u5">UNIT.</i> Space City серед рисових полів</p></div>
+    <div class="hero-dots" role="group" aria-label="Фото"></div>
   </section>
 
   <section class="sec" id="about">
@@ -141,6 +151,6 @@
     </nav>
   </div>
 </footer>
-<script src="../assets/site.js?v=mwl1orr8" defer></script>
+<script src="../assets/site.js?v=mwl21sem" defer></script>
 </body>
 </html>
