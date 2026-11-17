@@ -274,3 +274,4 @@ html{-webkit-tap-highlight-color:transparent}
 .form .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .form .btn[disabled]{opacity:.7;cursor:progress}
 @media (max-width:399px){.chips li{padding:0 8px;font-size:12px;line-height:12px}}
+.pchip.is-off{display:none}

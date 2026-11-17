@@ -137,7 +137,7 @@
   var rank = function (c) { return c.classList.contains('pchip-unit') || c.classList.contains('pchip-bso') ? -1 : P.indexOf(c.dataset.k); };
   var order = chips.slice().sort(function (a, b) { return rank(a) - rank(b); });
   function fit() {
-    chips.forEach(function (c) { c.style.setProperty('--dx', '0px'); c.style.setProperty('--lift', '0px'); c.style.visibility = ''; c.classList.remove('is-below'); });
+    chips.forEach(function (c) { c.style.setProperty('--dx', '0px'); c.style.setProperty('--lift', '0px'); c.classList.remove('is-below', 'is-off'); });
     var pr = plan.getBoundingClientRect(), box = plan.querySelector('.pchips').getBoundingClientRect(), m = 6, gap = 4;
     var kept = [];
     var free = function (L, T, w, h) {
@@ -162,7 +162,7 @@
           if (free(L, T, o.w, o.h)) { best = { below: below, lift: lift, dx: dxs[k], L: L, T: T }; break; }
         }
       }
-      if (!best) { o.c.style.visibility = 'hidden'; return; }
+      if (!best) { o.c.classList.add('is-off'); return; }
       o.c.classList.toggle('is-below', !!best.below);
       o.c.style.setProperty('--lift', best.lift + 'px');
       o.c.style.setProperty('--dx', best.dx.toFixed(1) + 'px');
