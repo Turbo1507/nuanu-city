@@ -1,18 +1,18 @@
 // Локации на мастер-плане Nuanu: координаты в % взяты с сайта UNIT. Space City (тот же план, v2/index.html .plan-pin), тексты на 9 языков.
-// m — показывать и на телефоне (там план листается вбок)
+// mx/my — точка на мобильном кадре plan-m.webp (до 768), привязка по совпадению картинок; m/w больше не используются
 export const PINS = [
-  { k: 'school', x: 51.98, y: 27.98, m: 1 },
-  { k: 'gallery', x: 36.01, y: 34.6 },
-  { k: 'alpaca', x: 67.54, y: 34.27, w: 1 },
-  { k: 'aurora', x: 79.72, y: 34.27, m: 1 },
-  { k: 'rest', x: 58.59, y: 45.73, m: 1 },
-  { k: 'shop', x: 83.99, y: 47.02 },
-  { k: 'luna', x: 43.91, y: 53.31, m: 1 },
-  { k: 'retreat', x: 67.54, y: 62.98 },
-  { k: 'cave', x: 36.99, y: 68.95 }
+  { k: 'school', x: 51.98, y: 27.98, mx: 52.09, my: 36.44, m: 1 },
+  { k: 'gallery', x: 36.01, y: 34.6, mx: 30.93, my: 40.69 },
+  { k: 'alpaca', x: 67.54, y: 34.27, mx: 72.71, my: 40.47, w: 1 },
+  { k: 'aurora', x: 79.72, y: 34.27, mx: 88.85, my: 40.47, m: 1 },
+  { k: 'rest', x: 58.59, y: 45.73, mx: 60.85, my: 47.83, m: 1 },
+  { k: 'shop', x: 83.99, y: 47.02, mx: 94.5, my: 48.66 },
+  { k: 'luna', x: 43.91, y: 53.31, mx: 41.4, my: 52.7, m: 1 },
+  { k: 'retreat', x: 67.54, y: 62.98, mx: 72.71, my: 58.9 },
+  { k: 'cave', x: 36.99, y: 68.95, mx: 32.23, my: 62.73 }
 ];
-export const UNIT_PIN = { x: 75.7, y: 19.7 }; // UNIT. Space City
-export const BSO_PIN = { x: 21.23, y: 20.8 }; // Black Sands Oasis: точка с сайта BSO (window.BSO_NUANU_BADGE_PIN), тот же план
+export const UNIT_PIN = { x: 75.7, y: 19.7, mx: 83.52, my: 31.12 }; // UNIT. Space City
+export const BSO_PIN = { x: 21.23, y: 20.8, mx: 11.35, my: 31.83 }; // Black Sands Oasis: точка с сайта BSO (window.BSO_NUANU_BADGE_PIN), тот же план
 export const PT = {
   en: { label: 'Locations on the Nuanu master plan', school: 'International school', gallery: 'Art gallery', alpaca: 'Alpaca park', aurora: 'Aurora media park', rest: 'Restaurants', shop: 'Shopping center', luna: 'Luna Beach Club', retreat: 'Retreat center', cave: 'Pool in the Utopia cave' },
   ru: { label: 'Локации на мастер‑плане Nuanu', school: 'Международная школа', gallery: 'Арт‑галерея', alpaca: 'Альпака‑парк', aurora: 'Медиапарк Aurora', rest: 'Рестораны', shop: 'Торговый центр', luna: 'Luna Beach Club', retreat: 'Ретритный центр', cave: 'Бассейн в пещере Utopia' },

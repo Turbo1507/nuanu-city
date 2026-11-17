@@ -113,11 +113,11 @@ ${['hero', 'hero2', 'hero3'].map((h, i) => `      <div class="hero-slide${i ? ''
         <p class="t">${d.about_p}</p>
       </div>
       <div class="plan"><div class="plan-canvas">
-        <img src="${R}assets/img/plan.webp" srcset="${R}assets/img/plan-s.webp 1200w, ${R}assets/img/plan.webp 2400w" sizes="(max-width:1599px) 100vw, 1600px" alt="${attr(plain(d.plan_alt))}" width="2400" height="1200" loading="lazy">
+        <picture><source media="(max-width:767px)" srcset="${R}assets/img/plan-m.webp" width="1120" height="1156"><img src="${R}assets/img/plan.webp" srcset="${R}assets/img/plan-s.webp 1200w, ${R}assets/img/plan.webp 2400w" sizes="(max-width:1599px) 100vw, 1600px" alt="${attr(plain(d.plan_alt))}" width="2400" height="1200" loading="lazy"></picture>
         <ul class="pchips" aria-label="${attr(PT[l].label)}">
-${PINS.map(p => `          <li class="pchip${p.m ? '' : ' pchip-d'}${p.w ? ' pchip-w' : ''}" data-k="${p.k}" style="--x:${p.x};--y:${p.y}">${glue(PT[l][p.k], l)}</li>`).join('\n')}
-          <li class="pchip pchip-unit" style="--x:${BSO_PIN.x};--y:${BSO_PIN.y}">Black Sands Oasis</li>
-          <li class="pchip pchip-unit" style="--x:${UNIT_PIN.x};--y:${UNIT_PIN.y}">${U} Space City</li>
+${PINS.map(p => `          <li class="pchip" data-k="${p.k}" style="--x:${p.x};--y:${p.y};--mx:${p.mx};--my:${p.my}">${glue(PT[l][p.k], l)}</li>`).join('\n')}
+          <li class="pchip pchip-bso" style="--x:${BSO_PIN.x};--y:${BSO_PIN.y};--mx:${BSO_PIN.mx};--my:${BSO_PIN.my}">Black Sands Oasis</li>
+          <li class="pchip pchip-unit" style="--x:${UNIT_PIN.x};--y:${UNIT_PIN.y};--mx:${UNIT_PIN.mx};--my:${UNIT_PIN.my}">${U} Space City</li>
         </ul>
       </div></div>
     </div>

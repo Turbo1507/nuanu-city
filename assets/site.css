@@ -92,7 +92,7 @@ ul{list-style:none}
   .about .ln{display:block}
   .about p{--mt:0px;max-width:30em;flex:0 1 auto}
 }
-@media (max-width:599px){.plan{aspect-ratio:4/3;border-radius:16px}}
+@media (max-width:599px){.plan{border-radius:16px}}
 
 /* проекты: фото вписано в карточку, кнопка внизу */
 .prj-sec .h2{--mb:clamp(40px,32px + 2.222vw,64px)}
@@ -225,19 +225,24 @@ html{-webkit-tap-highlight-color:transparent}
 .plan-canvas{position:absolute;inset:0;container-type:inline-size}
 .plan-canvas img{position:absolute;inset:0}
 .pchips{position:absolute;inset:0;pointer-events:none}
-.pchip{--stem:clamp(10px,1.4cqw,20px);position:absolute;left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);transform:translate(calc(-50% + var(--dx,0px)),calc(-100% - var(--stem)));padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.92);color:var(--ink);font-size:clamp(11px,.95cqw,14px);font-weight:500;line-height:1.15;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.18)}
-.pchip::after{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:100%;width:1px;height:var(--stem);background:rgba(255,255,255,.92)}
-.pchip::before{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:calc(100% + var(--stem) - 3px);width:6px;height:6px;margin-left:-2.5px;border-radius:50%;background:var(--white);box-shadow:0 0 0 2px rgba(0,0,0,.18)}
+.pchip{--stem:clamp(10px,1.4cqw,20px);position:absolute;left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);transform:translate(calc(-50% + var(--dx,0px)),calc(-100% - var(--stem) - var(--lift,0px)));padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.92);color:var(--ink);font-size:clamp(11px,.95cqw,14px);font-weight:500;line-height:1.15;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.18)}
+.pchip::after{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:100%;width:1px;height:calc(var(--stem) + var(--lift,0px));background:rgba(255,255,255,.92)}
+.pchip::before{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:calc(100% + var(--stem) + var(--lift,0px) - 3px);width:6px;height:6px;margin-left:-2.5px;border-radius:50%;background:var(--white);box-shadow:0 0 0 2px rgba(0,0,0,.18)}
 .pchip-unit{background:var(--blue);color:var(--white)}
-/* телефон: план листается вбок, как у Space City; видны главные локации */
-@media (max-width:599px){
-  .plan{height:246px;aspect-ratio:auto;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
-  .plan::-webkit-scrollbar{display:none}
-  .plan-canvas{position:relative;inset:auto;width:492px;height:100%}
-  .pchip-d{display:none}
+/* Black Sands Oasis — чёрный, как флаг на unitdeveloper.com */
+.pchip-bso{background:#131313;color:var(--white)}
+.pchip-bso::after{background:#131313}.pchip-bso::before{background:#131313;box-shadow:0 0 0 2px rgba(255,255,255,.5)}
+/* подпись под точкой (JS ставит, если сверху налезает на соседнюю) */
+.pchip.is-below{transform:translate(calc(-50% + var(--dx,0px)),calc(var(--stem) + var(--lift,0px)))}
+.pchip.is-below::after{top:auto;bottom:100%}
+.pchip.is-below::before{top:auto;bottom:calc(100% + var(--stem) + var(--lift,0px) - 3px)}
+/* телефон и узкий планшет: отдельный квадратный кадр всего Нуану (как на BSO и unitdeveloper), все метки мелким шрифтом */
+@media (max-width:767px){
+  .plan{aspect-ratio:1120/1156}
+  .pchip{--stem:8px;left:calc(var(--mx) * 1%);top:calc(var(--my) * 1%);padding:3px 6px;border-radius:5px;font-size:10px;line-height:12px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .pchip::before{width:5px;height:5px;margin-left:-2px}
 }
-/* на узком плане альпака-парк налезает на медиапарк — показываем его только от 1200 */
-@media (max-width:1199px){.pchip-w{display:none}}
+
 
 /* слайдер фото в карточках проектов: листается свайпом и трекпадом, точки внизу, стрелки при наведении */
 .prj-gal{position:relative}

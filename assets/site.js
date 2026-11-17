@@ -80,12 +80,6 @@
   run();
 })();
 
-// план на телефоне листается вбок: стартуем с середины, где основные локации
-(function () {
-  var p = document.querySelector('.plan');
-  if (!p || p.scrollWidth <= p.clientWidth) return;
-  p.scrollLeft = (p.scrollWidth - p.clientWidth) / 2;
-})();
 
 // «Экосистема»: блок текста ужимается по самой длинной строке, чтобы её край совпал с правым краем плана (≥1200)
 (function () {
@@ -134,35 +128,48 @@
   addEventListener('scroll', upd, { passive: true }); upd();
 })();
 
-// чипы плана не выходят за края: сдвигаем подпись внутрь, ножка остаётся на точке
+// чипы плана: каждый ищет свободное место — над точкой, выше на длинной ножке, под точкой, со сдвигом в сторону;
+// внутри плана и без наложений. Порядок важности: проекты, потом места. Прячем, только если не нашлось ни одного места.
 (function () {
   var plan = document.querySelector('.plan'); if (!plan) return;
-  var chips = [].slice.call(plan.querySelectorAll('.pchip')), lastW = 0, raf = 0;
+  var chips = [].slice.call(plan.querySelectorAll('.pchip')), lastW = 0;
   var P = ['luna', 'school', 'rest', 'aurora', 'gallery', 'retreat', 'cave', 'shop', 'alpaca'];
-  var rank = function (c) { return c.classList.contains('pchip-unit') ? -1 : P.indexOf(c.dataset.k); };
+  var rank = function (c) { return c.classList.contains('pchip-unit') || c.classList.contains('pchip-bso') ? -1 : P.indexOf(c.dataset.k); };
   var order = chips.slice().sort(function (a, b) { return rank(a) - rank(b); });
   function fit() {
-    raf = 0;
-    var pr = plan.getBoundingClientRect(), m = 8;
-    chips.forEach(function (c) { c.style.setProperty('--dx', '0px'); c.style.visibility = ''; });
-    var dx = chips.map(function (c) {
-      var r = c.getBoundingClientRect(); if (!r.width) return 0;
-      var s = 0, lim = r.width / 2 - 14;
-      if (r.left < pr.left + m) s = pr.left + m - r.left; else if (r.right > pr.right - m) s = pr.right - m - r.right;
-      return Math.max(-lim, Math.min(lim, s));
-    });
-    chips.forEach(function (c, i) { if (dx[i]) c.style.setProperty('--dx', dx[i].toFixed(1) + 'px'); });
-    // налезающие друг на друга: остаётся более важный, второй прячется
+    chips.forEach(function (c) { c.style.setProperty('--dx', '0px'); c.style.setProperty('--lift', '0px'); c.style.visibility = ''; c.classList.remove('is-below'); });
+    var pr = plan.getBoundingClientRect(), box = plan.querySelector('.pchips').getBoundingClientRect(), m = 6, gap = 4;
     var kept = [];
-    order.forEach(function (c) {
-      var r = c.getBoundingClientRect(); if (!r.width) return;
-      var hit = kept.some(function (q) { return r.left < q.right + 4 && q.left < r.right + 4 && r.top < q.bottom + 2 && q.top < r.bottom + 2; });
-      c.style.visibility = hit ? 'hidden' : '';
-      if (!hit) kept.push(r);
+    var free = function (L, T, w, h) {
+      if (L < pr.left + m || L + w > pr.right - m || T < pr.top + m || T + h > pr.bottom - m) return false;
+      return !kept.some(function (q) { return L < q.r + gap && q.l < L + w + gap && T < q.b + gap && q.t < T + h + gap; });
+    };
+    var plans = order.map(function (c) {
+      var r = c.getBoundingClientRect(), cs = getComputedStyle(c);
+      if (!r.width) return null;
+      var ax = box.left + parseFloat(cs.left), ay = box.top + parseFloat(cs.top), stem = ay - r.bottom, w = r.width, h = r.height;
+      return { c: c, ax: ax, ay: ay, stem: stem, w: w, h: h };
+    });
+    plans.forEach(function (o) {
+      if (!o) return;
+      var step = o.h + 4, lim = o.w / 2 - 10, dxs = [0, -o.w * .3, o.w * .3, -lim, lim], best = null;
+      var tries = [[0, 0], [0, 1], [1, 0], [0, 2], [1, 1], [0, 3], [1, 2], [0, 4], [0, 5], [1, 3]];
+      for (var t = 0; t < tries.length && !best; t++) {
+        var below = tries[t][0], lift = tries[t][1] * step;
+        var T = below ? o.ay + o.stem + lift : o.ay - o.stem - lift - o.h;
+        for (var k = 0; k < dxs.length; k++) {
+          var L = o.ax - o.w / 2 + dxs[k];
+          if (free(L, T, o.w, o.h)) { best = { below: below, lift: lift, dx: dxs[k], L: L, T: T }; break; }
+        }
+      }
+      if (!best) { o.c.style.visibility = 'hidden'; return; }
+      o.c.classList.toggle('is-below', !!best.below);
+      o.c.style.setProperty('--lift', best.lift + 'px');
+      o.c.style.setProperty('--dx', best.dx.toFixed(1) + 'px');
+      kept.push({ l: best.L, t: best.T, r: best.L + o.w, b: best.T + o.h });
     });
   }
-  function later() { if (!raf) raf = requestAnimationFrame(fit); }
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(fit);
-  addEventListener('resize', function () { if (innerWidth !== lastW) { lastW = innerWidth; later(); } });
-  plan.addEventListener('scroll', later, { passive: true });
+  addEventListener('load', fit);
+  addEventListener('resize', function () { if (innerWidth !== lastW) { lastW = innerWidth; requestAnimationFrame(fit); } });
 })();
