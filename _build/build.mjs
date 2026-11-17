@@ -118,6 +118,7 @@ ${prj.map(([href, dom, img, h, title, k]) => `        <article class="prj">
   <section class="sec sec-last" id="subscribe">
     <div class="container">
       <div class="sub">
+        <div class="sub-bg" aria-hidden="true"><span class="sub-blobs"><i></i><i></i><i></i><i></i><i></i></span><span class="sub-grain"></span></div>
         <h2 class="t h2">${d.sub_h2}</h2>
         <p class="t sub-p">${d.sub_p}</p>
         <ul class="chips" aria-label="${attr(d.chips_label)}"><li>${d.chip1}</li><li>${d.chip2}</li><li>${d.chip3}</li></ul>
