@@ -1,5 +1,6 @@
 // Сборка nuanu.city: корень на английском, остальные языки в /<код>/, текст вписан в HTML.
-// У каждой версии свои canonical и hreflang, title и description английские.
+// У каждой версии свои canonical и hreflang, title и description английские (правило Босса 23.10).
+// На github.io noindex; при сборке с доменом (node _build/build.mjs https://домен/) индексация открывается и пишется robots.txt.
 // Запуск из site/:  node _build/build.mjs [https://nuanu.city/]
 import fs from 'fs';
 import path from 'path';
@@ -9,6 +10,10 @@ import { glue } from './glue.mjs';
 import { CAPS, GAL, ARR } from './caps.mjs';
 import { PINS, UNIT_PIN, BSO_PIN, PT } from './plan.mjs';
 
+// выбор языка по куки: отдельным файлом, чтобы CSP обходилась без inline-скриптов
+const REDIR = `(function(){var L=/^(${LANGS.join('|')})$/;if(/bot|crawl|spider|slurp|lighthouse|headless|preview/i.test(navigator.userAgent))return;var w=(location.search.match(/[?&]lang=([a-z]{2})/)||[])[1];if(!w){var m=document.cookie.match(/(?:^|;\\s*)unit_lang=([a-z]{2})/);w=m&&m[1]}if(!w||w==='en'||!L.test(w))return;location.replace(location.pathname.replace(/[^/]*$/,'')+w+'/'+location.hash)})();`;
+const INDEX = !/github\.io/.test(process.argv[2] || 'https://turbo1507.github.io/');
+const OG_W = 1200, OG_H = 630; // размер hero.jpg для превью ссылок
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = (process.argv[2] || 'https://turbo1507.github.io/nuanu-city/').replace(/\/?$/, '/');
 const TITLE = 'Nuanu: a city of the future by the ocean in Bali';
@@ -35,23 +40,33 @@ function page(l) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="${INDEX ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'}">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://unitdeveloper.com; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#0433ff">
 <title>${attr(TITLE)}</title>
 <meta name="description" content="${attr(DESC)}">
 <link rel="canonical" href="${url(l)}">
 ${LANGS.map(x => `<link rel="alternate" hreflang="${x}" href="${url(x)}">`).join('\n')}
 <link rel="alternate" hreflang="x-default" href="${url('en')}">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="UNIT. in Nuanu">
 <meta property="og:url" content="${url(l)}">
 <meta property="og:title" content="Nuanu: a city of the future by the ocean">
 <meta property="og:description" content="${attr(DESC)}">
-<meta property="og:image" content="${SITE}assets/img/hero.jpg">
+<meta property="og:image" content="${SITE}assets/img/og.jpg">
+<meta property="og:image:width" content="${OG_W}">
+<meta property="og:image:height" content="${OG_H}">
+<meta property="og:image:alt" content="${attr(plain(T.en.hero_alt))}">
 <meta property="og:locale" content="${LOCALE[l]}">
+${LANGS.filter(x => x !== l).map(x => `<meta property="og:locale:alternate" content="${LOCALE[x]}">`).join('\n')}
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': [{ '@type': 'WebSite', name: "UNIT. in Nuanu", url: SITE, inLanguage: LANGS }, { '@type': 'Organization', name: 'UNIT.', url: 'https://unitdeveloper.com', sameAs: ['https://blacksandsoasis.com', 'https://unitspace.city', 'https://unit.now'] }] }).replace(/</g, '\\u003c')}</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230433ff%27/%3E%3Ccircle cx=%2722%27 cy=%2722%27 r=%273%27 fill=%27%23fff%27/%3E%3C/svg%3E">
 <link rel="preload" href="${R}assets/fonts/hn-medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${R}assets/fonts/hn-roman.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${R}assets/site.css?v=${V}">
-${l === 'en' ? `<script>(function(){var L=/^(${LANGS.join('|')})$/;if(/bot|crawl|spider|slurp|lighthouse|headless|preview/i.test(navigator.userAgent))return;var w=(location.search.match(/[?&]lang=([a-z]{2})/)||[])[1];if(!w){var m=document.cookie.match(/(?:^|;\\s*)unit_lang=([a-z]{2})/);w=m&&m[1]}if(!w||w==='en'||!L.test(w))return;location.replace(location.pathname.replace(/[^/]*$/,'')+w+'/'+location.hash)})();</script>` : ''}
+${l === 'en' ? `<script src="assets/redir.js?v=${V}"></script>` : ''}
 </head>
 <body>
 <header class="hdr">
@@ -100,7 +115,7 @@ ${['hero', 'hero2', 'hero3'].map((h, i) => `      <div class="hero-slide${i ? ''
       <div class="plan"><div class="plan-canvas">
         <img src="${R}assets/img/plan.webp" srcset="${R}assets/img/plan-s.webp 1200w, ${R}assets/img/plan.webp 2400w" sizes="(max-width:1599px) 100vw, 1600px" alt="${attr(plain(d.plan_alt))}" width="2400" height="1200" loading="lazy">
         <ul class="pchips" aria-label="${attr(PT[l].label)}">
-${PINS.map(p => `          <li class="pchip${p.m ? '' : ' pchip-d'}${p.w ? ' pchip-w' : ''}" style="--x:${p.x};--y:${p.y}">${glue(PT[l][p.k], l)}</li>`).join('\n')}
+${PINS.map(p => `          <li class="pchip${p.m ? '' : ' pchip-d'}${p.w ? ' pchip-w' : ''}" data-k="${p.k}" style="--x:${p.x};--y:${p.y}">${glue(PT[l][p.k], l)}</li>`).join('\n')}
           <li class="pchip pchip-unit" style="--x:${BSO_PIN.x};--y:${BSO_PIN.y}">Black Sands Oasis</li>
           <li class="pchip pchip-unit" style="--x:${UNIT_PIN.x};--y:${UNIT_PIN.y}">${U} Space City</li>
         </ul>
@@ -136,9 +151,10 @@ ${prj.map(([href, dom, img, h, title, k]) => `        <article class="prj">
         <h2 class="t h2">${d.sub_h2}</h2>
         <p class="t sub-p">${d.sub_p}</p>
         <ul class="chips" aria-label="${attr(d.chips_label)}"><li>${d.chip1}</li><li>${d.chip2}</li><li>${d.chip3}</li></ul>
-        <form class="form" id="subForm" data-endpoint="" data-ok="${attr(d.ok)}" data-off="${attr(d.off)}" data-fail="${attr(d.fail)}" data-bad="${attr(d.bad)}" novalidate>
+        <form class="form" id="subForm" data-endpoint="https://unitdeveloper.com/wp-json/unit/v1/nuanu-sub" data-ok="${attr(d.ok)}" data-off="${attr(d.off)}" data-fail="${attr(d.fail)}" data-bad="${attr(d.bad)}" novalidate>
           <label class="sr" for="subEmail">${d.sub_label}</label>
           <input id="subEmail" name="email" type="email" autocomplete="email" required placeholder="${attr(d.sub_ph)}">
+          <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button class="btn btn-white" type="submit">${d.sub_btn}</button>
         </form>
         <p class="form-note" id="subNote" role="status" aria-live="polite"></p>
@@ -175,4 +191,7 @@ ${LANGS.map(l => `  <url><loc>${url(l)}</loc>${LANGS.map(x => `<xhtml:link rel="
 </urlset>
 `;
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sm);
+fs.writeFileSync(path.join(ROOT, 'assets', 'redir.js'), REDIR + '\n');
+if (INDEX) fs.writeFileSync(path.join(ROOT, 'robots.txt'), 'User-agent: *\nAllow: /\n\nSitemap: ' + SITE + 'sitemap.xml\n');
+else if (fs.existsSync(path.join(ROOT, 'robots.txt'))) fs.rmSync(path.join(ROOT, 'robots.txt'));
 console.log('build:', LANGS.join(' '), SITE);

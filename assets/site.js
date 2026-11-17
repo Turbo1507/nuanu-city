@@ -38,16 +38,24 @@
 (function () {
   var form = document.getElementById('subForm');
   if (!form) return;
-  var note = document.getElementById('subNote'), inp = form.querySelector('input'), d = form.dataset;
+  var note = document.getElementById('subNote'), inp = form.querySelector('#subEmail'), hp = form.querySelector('.hp'), btn = form.querySelector('button[type=submit]'), d = form.dataset;
+  inp.setAttribute('aria-describedby', 'subNote');
+  function say(t, err) { note.textContent = t; note.classList.toggle('is-err', !!err); }
+  function bad() { inp.setAttribute('aria-invalid', 'true'); say(d.bad, true); inp.focus(); }
+  inp.addEventListener('input', function () { if (inp.hasAttribute('aria-invalid')) { inp.removeAttribute('aria-invalid'); say(''); } });
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var v = inp.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { note.textContent = d.bad; inp.setAttribute('aria-invalid', 'true'); inp.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return bad();
     inp.removeAttribute('aria-invalid');
-    if (!d.endpoint) { note.textContent = d.off; return; }
-    fetch(d.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: v, source: 'nuanu.city', lang: document.documentElement.lang }) })
-      .then(function (r) { if (!r.ok) throw 0; note.textContent = d.ok; form.reset(); })
-      .catch(function () { note.textContent = d.fail; });
+    if (!d.endpoint) return say(d.off);
+    btn.disabled = true; say('');
+    var body = new URLSearchParams({ email: v, website: hp ? hp.value : '', lang: document.documentElement.lang, page: location.pathname });
+    fetch(d.endpoint, { method: 'POST', body: body })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (x) { if (r.status === 400 && x.error === 'email') throw 'email'; if (!r.ok) throw 0; }); })
+      .then(function () { say(d.ok); form.reset(); })
+      .catch(function (err) { if (err === 'email') bad(); else say(d.fail, true); })
+      .then(function () { btn.disabled = false; });
   });
 })();
 
@@ -116,4 +124,45 @@
     next.addEventListener('click', function () { go(cur + 1); });
     sync();
   });
+})();
+
+// шапка липкая, как у фурнитуры: над первым экраном прозрачная, дальше светлая подложка
+(function () {
+  var h = document.querySelector('.hdr'), hero = document.querySelector('.hero');
+  if (!h || !hero) return;
+  function upd() { h.classList.toggle('is-over', hero.getBoundingClientRect().bottom > h.offsetHeight); }
+  addEventListener('scroll', upd, { passive: true }); upd();
+})();
+
+// чипы плана не выходят за края: сдвигаем подпись внутрь, ножка остаётся на точке
+(function () {
+  var plan = document.querySelector('.plan'); if (!plan) return;
+  var chips = [].slice.call(plan.querySelectorAll('.pchip')), lastW = 0, raf = 0;
+  var P = ['luna', 'school', 'rest', 'aurora', 'gallery', 'retreat', 'cave', 'shop', 'alpaca'];
+  var rank = function (c) { return c.classList.contains('pchip-unit') ? -1 : P.indexOf(c.dataset.k); };
+  var order = chips.slice().sort(function (a, b) { return rank(a) - rank(b); });
+  function fit() {
+    raf = 0;
+    var pr = plan.getBoundingClientRect(), m = 8;
+    chips.forEach(function (c) { c.style.setProperty('--dx', '0px'); c.style.visibility = ''; });
+    var dx = chips.map(function (c) {
+      var r = c.getBoundingClientRect(); if (!r.width) return 0;
+      var s = 0, lim = r.width / 2 - 14;
+      if (r.left < pr.left + m) s = pr.left + m - r.left; else if (r.right > pr.right - m) s = pr.right - m - r.right;
+      return Math.max(-lim, Math.min(lim, s));
+    });
+    chips.forEach(function (c, i) { if (dx[i]) c.style.setProperty('--dx', dx[i].toFixed(1) + 'px'); });
+    // налезающие друг на друга: остаётся более важный, второй прячется
+    var kept = [];
+    order.forEach(function (c) {
+      var r = c.getBoundingClientRect(); if (!r.width) return;
+      var hit = kept.some(function (q) { return r.left < q.right + 4 && q.left < r.right + 4 && r.top < q.bottom + 2 && q.top < r.bottom + 2; });
+      c.style.visibility = hit ? 'hidden' : '';
+      if (!hit) kept.push(r);
+    });
+  }
+  function later() { if (!raf) raf = requestAnimationFrame(fit); }
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(fit);
+  addEventListener('resize', function () { if (innerWidth !== lastW) { lastW = innerWidth; later(); } });
+  plan.addEventListener('scroll', later, { passive: true });
 })();
