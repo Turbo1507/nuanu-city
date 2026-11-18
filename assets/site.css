@@ -284,3 +284,27 @@ html{-webkit-tap-highlight-color:transparent}
 .pchip{transition:opacity .5s ease,visibility .5s}
 .pchip.is-hid{opacity:0;visibility:hidden}
 @media (prefers-reduced-motion:reduce){.pchip{transition:none}}
+
+/* бенто о Нуану под планом: тот же зазор, что между карточками, план и карточки читаются одним блоком */
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:16px}
+.bento-card{display:flex;flex-direction:column;min-height:176px;padding:32px;border-radius:24px;background:var(--white)}
+.b-1,.b-6,.b-7,.b-8{grid-column:span 2}
+.b-1{background:var(--blue);color:var(--white)}
+.bento-v{--fs:clamp(32px,25.33px + 1.852vw,52px);--lh:calc(var(--fs)*1.05);font-weight:500;letter-spacing:-.02em;color:var(--blue)}
+/* словом, а не числом: мельче, чтобы слово не рвалось */
+.b-4 .bento-v,.b-5 .bento-v,.b-7 .bento-v{--fs:clamp(24px,20px + 1.111vw,36px);--lh:calc(var(--fs)*1.1)}
+.b-1 .bento-v{color:var(--white)}
+.bento-c{--fs:16px;--lh:20px;--mt:24px;color:var(--ink-2);max-width:28em}
+.b-1 .bento-c{color:rgba(255,255,255,.86)}
+.nw{white-space:nowrap}
+@media (max-width:1023px){
+  .bento{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .b-6,.b-7,.b-8{grid-column:span 1}
+  .b-1,.b-8{grid-column:span 2}
+}
+@media (max-width:599px){
+  .bento{gap:8px;margin-top:8px}
+  .bento-card{min-height:0;padding:24px 16px;border-radius:16px}
+  .bento-c{--fs:14px;--lh:18px;--mt:16px}
+}
+@media (max-width:399px){.b-4 .bento-v,.b-5 .bento-v,.b-7 .bento-v{--fs:20px;--lh:22px}}

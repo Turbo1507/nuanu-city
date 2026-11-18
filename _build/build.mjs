@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import { LANGS, NATIVE, LOCALE, T } from './i18n-texts.mjs';
 import { glue } from './glue.mjs';
 import { NOW } from './i18n-now.mjs';
+import { BENTO } from './i18n-bento.mjs';
 import { CAPS, GAL, ARR } from './caps.mjs';
 import { PINS, UNIT_PIN, BSO_PIN, PT } from './plan.mjs';
 
@@ -122,6 +123,9 @@ ${PINS.map(p => `          <li class="pchip" data-k="${p.k}" style="--x:${p.x};-
           <li class="pchip pchip-unit" style="--x:${UNIT_PIN.x};--y:${UNIT_PIN.y};--mx:${UNIT_PIN.mx};--my:${UNIT_PIN.my}">${U} Space City</li>
         </ul>
       </div></div>
+      <ul class="bento">
+${BENTO[l].map(([v, c], i) => `        <li class="bento-card b-${i + 1}"><b class="t bento-v">${v.replace(/ (\p{L}{1,2}) /gu, ' $1 ')}</b><span class="t bento-c">${glue(c, l).replace(/(\p{L}+-\p{L}+)/gu, '<i class="nw">$1</i>')}</span></li>`).join('\n')}
+      </ul>
     </div>
   </section>
 
