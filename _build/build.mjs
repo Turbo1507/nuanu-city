@@ -7,6 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { LANGS, NATIVE, LOCALE, T } from './i18n-texts.mjs';
 import { glue } from './glue.mjs';
+import { NOW } from './i18n-now.mjs';
 import { CAPS, GAL, ARR } from './caps.mjs';
 import { PINS, UNIT_PIN, BSO_PIN, PT } from './plan.mjs';
 
@@ -26,7 +27,9 @@ const U = '<i class="u5">UNIT.</i>';
 const BRAND = `${U} in Nuanu`;
 
 function page(l) {
-  const d = Object.fromEntries(Object.entries(T[l]).map(([k, v]) => [k, glue(v, l)]));
+  const d = Object.fromEntries(Object.entries({ ...T[l], ...NOW[l] }).map(([k, v]) => [k, glue(v, l)]));
+  // «UNIT.» в конце абзаца не остаётся одно на строке
+  d.nw_p = d.nw_p.replace(/ (<i class="u5">UNIT\.<\/i>)$/, '\u00a0$1');
   const R = l === 'en' ? '' : '../';
   const caps = CAPS[l].map(c => glue(c, l));
   const langs = LANGS.map(x => `<li><a href="${R}${x === 'en' ? '' : x + '/'}" hreflang="${x}" lang="${x}"${x === l ? ' aria-current="true"' : ''}>${NATIVE[x]}</a></li>`).join('');
@@ -75,13 +78,13 @@ ${l === 'en' ? `<script src="assets/redir.js?v=${V}"></script>` : ''}
     <nav class="nav" aria-label="${attr(d.nav_label)}">
       <a href="#about">${d.nav_about}</a>
       <a href="#projects">${d.nav_projects}</a>
-      <a href="#subscribe">${d.nav_sub}</a>
+      <a href="#now">${d.nav_now}</a>
     </nav>
     <div class="lang-dd">
       <button type="button" class="lang-dd-btn" aria-expanded="false" aria-controls="langList" aria-label="${attr(d.lang_label)}: ${NATIVE[l]}"><span>${l.toUpperCase()}</span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
       <ul class="lang-dd-list" id="langList" hidden>${langs}</ul>
     </div>
-    <a class="btn btn-sm hdr-cta" href="#subscribe">${d.cta}</a>
+    <a class="btn btn-sm hdr-cta" href="#projects">${d.explore}</a>
   </div>
 </header>
 
@@ -98,8 +101,7 @@ ${['hero', 'hero2', 'hero3'].map((h, i) => `      <div class="hero-slide${i ? ''
       <p class="t h1-sub">${d.h1_sub}</p>
       <p class="t hero-p">${d.hero_p}</p>
       <div class="btns">
-        <a class="btn btn-blue" href="#projects"><span>${d.hero_cta1}</span></a>
-        <a class="btn btn-ghost" href="#subscribe">${d.hero_cta2}</a>
+        <a class="btn btn-blue" href="#projects"><span>${d.explore}</span></a>
       </div>
     </div>
     <div class="hero-caps">${caps.map((c, i) => `<p class="hero-cap${i ? '' : ' on'}"${i ? ' aria-hidden="true"' : ''}>${c}</p>`).join('')}</div>
@@ -144,20 +146,14 @@ ${prj.map(([href, dom, img, h, title, k]) => `        <article class="prj">
     </div>
   </section>
 
-  <section class="sec sec-last" id="subscribe">
+  <section class="sec sec-last" id="now">
     <div class="container">
       <div class="sub">
         <div class="sub-bg" aria-hidden="true"><span class="sub-blobs"><i></i><i></i><i></i><i></i><i></i></span><span class="sub-grain"></span></div>
-        <h2 class="t h2">${d.sub_h2}</h2>
-        <p class="t sub-p">${d.sub_p}</p>
-        <ul class="chips" aria-label="${attr(d.chips_label)}"><li>${d.chip1}</li><li>${d.chip2}</li><li>${d.chip3}</li></ul>
-        <form class="form" id="subForm" data-endpoint="https://unitdeveloper.com/wp-json/unit/v1/nuanu-sub" data-ok="${attr(d.ok)}" data-off="${attr(d.off)}" data-fail="${attr(d.fail)}" data-bad="${attr(d.bad)}" novalidate>
-          <label class="sr" for="subEmail">${d.sub_label}</label>
-          <input id="subEmail" name="email" type="email" autocomplete="email" required placeholder="${attr(d.sub_ph)}">
-          <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <button class="btn btn-white" type="submit">${d.sub_btn}</button>
-        </form>
-        <p class="form-note" id="subNote" role="status" aria-live="polite"></p>
+        <span class="sub-tag">${d.nw_tag}</span>
+        <h2 class="t h2">${d.nw_t}</h2>
+        <p class="t sub-p">${d.nw_p}</p>
+        <a class="btn btn-white sub-btn" href="https://unit.now">${d.nw_cta}</a>
       </div>
     </div>
   </section>

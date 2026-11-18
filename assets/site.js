@@ -124,13 +124,13 @@
 (function () {
   var h = document.querySelector('.hdr'), hero = document.querySelector('.hero');
   if (!h || !hero) return;
-  // в самом верху прозрачная; листаем по первому экрану — тёмное стекло (заголовок не попадает под текст шапки); ниже — светлая
-  function upd() { h.classList.toggle('is-over', hero.getBoundingClientRect().bottom > h.offsetHeight); h.classList.toggle('is-top', scrollY < 4); }
+  // прозрачная только в самом верху; чуть прокрутили — светлая, иначе белый заголовок сливается с белым текстом шапки
+  function upd() { h.classList.toggle('is-over', scrollY < 4); }
   addEventListener('scroll', upd, { passive: true }); upd();
 })();
 
 // чипы плана. Десктоп: каждый ищет свободное место — над точкой, выше на длинной ножке, под точкой, со сдвигом.
-// Телефон (до 768): BSO и Space City видны всегда, места сменяются группами по 3 раз в 3 с; в группе никто ни на кого не налезает.
+// Телефон (до 768): BSO и Space City видны всегда, остальные места появляются и гаснут по одному в случайное время, до 3 сразу, без наложений.
 (function () {
   var plan = document.querySelector('.plan'); if (!plan) return;
   var chips = [].slice.call(plan.querySelectorAll('.pchip')), lastW = 0;
@@ -139,7 +139,7 @@
   var rank = function (c) { return isProj(c) ? -1 : P.indexOf(c.dataset.k); };
   var order = chips.slice().sort(function (a, b) { return rank(a) - rank(b); });
   var phone = matchMedia('(max-width:767px)'), still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var groups = [], gi = 0, timer = 0, seen = false;
+  var timer = 0, seen = false;
 
   function measure() {
     chips.forEach(function (c) { c.style.setProperty('--dx', '0px'); c.style.setProperty('--lift', '0px'); c.classList.remove('is-below', 'is-off', 'is-hid'); });
@@ -180,36 +180,54 @@
     });
   }
 
+  // телефон: места живут по одному — каждое гаснет и появляется в своё время, на экране до 3, без наложений
+  var pool = [], vis = [], g0 = null, fixed = [], lastOff = null, short = [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2]];
   function mobile() {
-    var g = measure(), fixed = [], short = [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2]];
-    groups = [];
-    g.list.forEach(function (o) {
+    g0 = measure(); fixed = []; pool = []; vis = [];
+    g0.list.forEach(function (o) {
       if (!o.w) return;
-      if (isProj(o.c)) { var b = find(o, g.pr, fixed, short); if (b) fixed.push(put(o, b)); return; }
-      // в первую группу, где хватает места и меньше 3 меток; иначе новая группа
-      for (var i = 0; i <= groups.length; i++) {
-        if (!groups[i]) groups[i] = { items: [], rects: [] };
-        var G = groups[i]; if (G.items.length >= 3) continue;
-        var best = find(o, g.pr, fixed.concat(G.rects), short);
-        if (best) { G.items.push({ o: o, best: best }); G.rects.push({ l: best.L, t: best.T, r: best.L + o.w, b: best.T + o.h }); return; }
-        if (!G.items.length) { groups.pop(); o.c.classList.add('is-off'); return; } // места нет даже в пустой группе
-      }
+      if (isProj(o.c)) { var b = find(o, g0.pr, fixed, short); if (b) fixed.push(put(o, b)); return; }
+      // спрятанное место тоже стоит внутри плана: своё место без учёта соседей
+      var own = find(o, g0.pr, fixed, short); if (!own) { o.c.classList.add('is-off'); return; }
+      put(o, own); o.c.classList.add('is-hid'); pool.push(o);
     });
-    groups = groups.filter(function (G) { return G.items.length; });
-    groups.forEach(function (G, i) { G.items.forEach(function (it) { put(it.o, it.best); it.o.c.dataset.g = i; it.o.c.classList.add('is-hid'); }); });
-    gi = 0; show();
   }
-  function show() {
-    groups.forEach(function (G, i) { G.items.forEach(function (it) { it.o.c.classList.toggle('is-hid', i !== gi); }); });
+  function rect(o, b) { return { l: b.L, t: b.T, r: b.L + o.w, b: b.T + o.h }; }
+  function showOne() {
+    var cand = pool.filter(function (o) { return o !== lastOff && !vis.some(function (v) { return v.o === o; }); });
+    cand.sort(function () { return Math.random() - .5; });
+    for (var k = 0; k < cand.length; k++) {
+      var o = cand[k], b = find(o, g0.pr, fixed.concat(vis.map(function (v) { return v.r; })), short);
+      if (b) { put(o, b); o.c.classList.remove('is-hid'); vis.push({ o: o, r: rect(o, b) }); return true; }
+    }
+    return false;
   }
-  // сначала гаснет текущая группа, потом проявляется следующая — полупрозрачные метки не встречаются
-  function tick() { if (groups.length < 2) return; groups[gi].items.forEach(function (it) { it.o.c.classList.add('is-hid'); }); gi = (gi + 1) % groups.length; setTimeout(show, 550); }
+  function hideOne() { var v = vis.shift(); if (v) { v.o.c.classList.add('is-hid'); lastOff = v.o; } }
+  function step() {
+    // чаще гасим, когда меток уже 3; иногда гасим и при двух, чтобы ритм не повторялся
+    if (vis.length >= 3 || (vis.length > 1 && Math.random() < .3)) hideOne(); else if (!showOne()) hideOne();
+    timer = setTimeout(step, 600 + Math.random() * 1200);
+  }
+  // десктоп: при первом показе плана метки проявляются вразнобой
+  var revealed = false;
+  function reveal() {
+    if (revealed || phone.matches) return; revealed = true;
+    if (still) return;
+    chips.forEach(function (c) {
+      if (c.classList.contains('is-off')) return;
+      c.classList.add('is-hid');
+      setTimeout(function () { c.classList.remove('is-hid'); }, (isProj(c) ? 0 : 250) + Math.random() * 1400);
+    });
+  }
   function run() {
-    clearInterval(timer); timer = 0;
-    if (!phone.matches || still || document.hidden || !seen || groups.length < 2) return;
-    timer = setInterval(tick, 3000);
+    clearTimeout(timer); timer = 0;
+    if (seen) reveal();
+    if (!phone.matches || !g0) return;
+    if (still) { while (vis.length < 3 && showOne()); return; }
+    if (document.hidden || !seen) return;
+    timer = setTimeout(step, 300 + Math.random() * 500);
   }
-  function fit() { if (phone.matches) mobile(); else { groups = []; desktop(); } run(); }
+  function fit() { if (phone.matches) mobile(); else { g0 = null; desktop(); } run(); }
 
   if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { seen = e[0].isIntersecting; run(); }).observe(plan);
   else seen = true;

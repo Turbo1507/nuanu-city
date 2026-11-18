@@ -37,8 +37,7 @@ ul{list-style:none}
 
 /* шапка как у UNIT.FURNITURE: прозрачная поверх первого экрана */
 .hdr{position:fixed;inset:0 0 auto;z-index:20;color:var(--ink);background:rgba(244,244,244,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);transition:background-color .3s,border-color .3s,color .3s}
-.hdr.is-over{color:var(--white);background:rgba(0,0,0,.34);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-color:rgba(255,255,255,.08)}
-.hdr.is-over.is-top{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;border-color:transparent}
+.hdr.is-over{color:var(--white);background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;border-color:transparent}
 /* в Telegram и Safari на iOS верх страницы виден сквозь их полупрозрачную плашку: продлеваем подложку шапки вверх */
 .hdr::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:240px;background:inherit;-webkit-backdrop-filter:inherit;backdrop-filter:inherit;pointer-events:none}
 .hdr-in{display:flex;align-items:center;height:64px}
@@ -142,8 +141,11 @@ ul{list-style:none}
 @keyframes sub-float{0%{transform:translate(0,0) scale(1)}25%{transform:translate(26%,20%) scale(1.14)}50%{transform:translate(6%,42%) scale(.88)}75%{transform:translate(-24%,18%) scale(1.1)}100%{transform:translate(-8%,-6%) scale(.96)}}
 @media (prefers-reduced-motion:reduce){.sub-blobs i{animation:none}}
 .sub-grain{position:absolute;inset:0;opacity:.2;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27160%27 height=%27160%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%27.9%27 numOctaves=%272%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E")}
-.sub .h2{max-width:640px}
-.sub-p{--fs:clamp(16px,15.33px + .185vw,18px);--lh:clamp(20px,19px + .278vw,23px);--mt:clamp(24px,21.33px + .741vw,32px);max-width:560px}
+.sub .h2{--mt:24px;max-width:760px}
+.sub-tag{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:10px;background:rgba(255,255,255,.14);font-size:14px;font-weight:500;line-height:14px;white-space:nowrap}
+.sub-btn{margin-top:40px}
+@media (max-width:599px){.sub-btn{margin-top:24px;width:100%}}
+.sub-p{--fs:clamp(16px,15.33px + .185vw,18px);--lh:clamp(20px,19px + .278vw,23px);--mt:clamp(24px,21.33px + .741vw,32px);max-width:640px}
 .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:clamp(24px,21.33px + .741vw,32px)}
 .chips li{display:flex;align-items:center;height:30px;padding:0 12px;border-radius:10px;background:rgba(255,255,255,.14);font-size:14px;font-weight:500;line-height:14px;white-space:nowrap}
 .form{display:flex;gap:8px;width:min(100%,545px);margin-top:clamp(24px,18.67px + 1.481vw,40px)}
@@ -278,7 +280,7 @@ html{-webkit-tap-highlight-color:transparent}
 .form .btn[disabled]{opacity:.7;cursor:progress}
 @media (max-width:399px){.chips li{padding:0 8px;font-size:12px;line-height:12px}}
 .pchip.is-off{display:none}
-/* телефон: места плавно сменяются группами */
+/* места плавно появляются и гаснут по одному */
 .pchip{transition:opacity .5s ease,visibility .5s}
 .pchip.is-hid{opacity:0;visibility:hidden}
 @media (prefers-reduced-motion:reduce){.pchip{transition:none}}
