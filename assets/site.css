@@ -41,6 +41,8 @@ ul{list-style:none}
 /* в Telegram и Safari на iOS верх страницы виден сквозь их полупрозрачную плашку: продлеваем подложку шапки вверх */
 .hdr::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:240px;background:inherit;-webkit-backdrop-filter:inherit;backdrop-filter:inherit;pointer-events:none}
 .hdr-in{display:flex;align-items:center;height:64px}
+/* после начала прокрутки логотип с подписью синий */
+.hdr:not(.is-over) .wordmark{color:var(--blue)}
 .wordmark{font-size:20px;line-height:24px;letter-spacing:-.02em;white-space:nowrap;margin-right:auto}
 .nav{display:flex;gap:32px;margin-right:24px;font-size:14px;font-weight:500;line-height:18px}
 .nav a{display:flex;align-items:center;min-height:44px;transition:opacity .2s}
@@ -97,7 +99,8 @@ ul{list-style:none}
 @media (max-width:599px){.plan{border-radius:16px}}
 
 /* проекты: фото вписано в карточку, кнопка внизу */
-.prj-sec .h2{--mb:clamp(40px,32px + 2.222vw,64px)}
+.prj-sec .h2{--mb:0}
+.prj-lead{--fs:clamp(18px,16.67px + .37vw,22px);--lh:clamp(23px,21.33px + .463vw,28px);--mt:24px;--mb:clamp(40px,32px + 2.222vw,64px);color:var(--ink-2);max-width:40em}
 .prj-list{display:grid;gap:24px}
 .prj{display:flex;flex-direction:column;align-items:stretch;background:var(--white);border-radius:24px;padding:8px 8px 32px}
 .prj-photo{aspect-ratio:411/306;border-radius:16px;overflow:clip;background:#d9d9d9}
@@ -109,11 +112,11 @@ ul{list-style:none}
 .prj-body p{flex:1 0 auto}
 .prj .btn{margin-top:32px;width:100%}
 /* увеличение фото при наведении убрано: в слайдере соседние кадры вылезали бы на края */
-@media (min-width:1200px){
-  .prj-list{grid-template-columns:repeat(3,1fr)}
+@media (min-width:768px){
+  .prj-list{grid-template-columns:repeat(2,1fr)}
 }
-/* до 1200 карусель: карточки одной высоты, кнопка сразу под текстом */
-@media (max-width:1199px){
+/* на телефоне карусель: карточки одной высоты, кнопка сразу под текстом */
+@media (max-width:767px){
   .prj-list{grid-auto-flow:column;grid-auto-columns:min(340px,82vw);gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gutter);margin-inline:calc(var(--gutter)*-1);padding-inline:var(--gutter);scrollbar-width:none;overscroll-behavior-x:contain}
   .prj-list::-webkit-scrollbar{display:none}
   .prj{scroll-snap-align:start}
@@ -308,3 +311,16 @@ html{-webkit-tap-highlight-color:transparent}
   .bento-c{--fs:14px;--lh:18px;--mt:16px}
 }
 @media (max-width:399px){.b-4 .bento-v,.b-5 .bento-v,.b-7 .bento-v{--fs:20px;--lh:22px}}
+
+/* фото-карточки бенто: кадр на всю карточку, текст внизу поверх чёрного затемнения */
+.bento{grid-auto-rows:minmax(264px,auto)}
+.bento-card{position:relative;overflow:clip;isolation:isolate}
+.bento-card.is-photo{justify-content:flex-end;background:#1a1a1a;color:var(--white)}
+.bento-card.is-photo picture,.bento-card.is-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.bento-card.is-photo::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 20%,rgba(0,0,0,.45) 55%,rgba(0,0,0,.8) 100%)}
+.bento-card.is-photo .bento-v{color:var(--white)}
+.bento-card.is-photo .bento-c{color:rgba(255,255,255,.88)}
+.b-6{background:var(--blue)}.b-6 .bento-v{color:var(--white)}.b-6 .bento-c{color:rgba(255,255,255,.86)}
+.b-1{background:#1a1a1a}
+@media (max-width:1023px){.bento{grid-auto-rows:minmax(240px,auto)}}
+@media (max-width:599px){.bento{grid-auto-rows:minmax(200px,auto)}}

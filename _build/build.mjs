@@ -34,10 +34,10 @@ function page(l) {
   const R = l === 'en' ? '' : '../';
   const caps = CAPS[l].map(c => glue(c, l));
   const langs = LANGS.map(x => `<li><a href="${R}${x === 'en' ? '' : x + '/'}" hreflang="${x}" lang="${x}"${x === l ? ' aria-current="true"' : ''}>${NATIVE[x]}</a></li>`).join('');
+  const BPH = { 1: 'b-ocean', 2: 'b-luna', 3: 'b-aurora', 4: 'b-school', 7: 'b-art', 8: 'b-tanah' };
   const prj = [
     ['https://blacksandsoasis.com', 'blacksandsoasis.com', 'p-bso', 585, 'Black Sands Oasis', 'bso'],
-    ['https://unitspace.city', 'unitspace.city', 'p-space', 600, `${U} Space City`, 'space'],
-    ['https://unit.now', 'unit.now', 'p-now', 600, d.now_t, 'now']
+    ['https://unitspace.city', 'unitspace.city', 'p-space', 600, `${U} Space City`, 'space']
   ];
   return `<!doctype html>
 <html lang="${l}"${l === 'en' ? '' : ' data-root="../"'}>
@@ -78,8 +78,8 @@ ${l === 'en' ? `<script src="assets/redir.js?v=${V}"></script>` : ''}
     <a class="wordmark" href="#top">${BRAND}</a>
     <nav class="nav" aria-label="${attr(d.nav_label)}">
       <a href="#about">${d.nav_about}</a>
-      <a href="#projects">${d.nav_projects}</a>
       <a href="#now">${d.nav_now}</a>
+      <a href="#projects">${d.nav_projects}</a>
     </nav>
     <div class="lang-dd">
       <button type="button" class="lang-dd-btn" aria-expanded="false" aria-controls="langList" aria-label="${attr(d.lang_label)}: ${NATIVE[l]}"><span>${l.toUpperCase()}</span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
@@ -124,14 +124,27 @@ ${PINS.map(p => `          <li class="pchip" data-k="${p.k}" style="--x:${p.x};-
         </ul>
       </div></div>
       <ul class="bento">
-${BENTO[l].map(([v, c], i) => `        <li class="bento-card b-${i + 1}"><b class="t bento-v">${v.replace(/ (\p{L}{1,2}) /gu, ' $1 ')}</b><span class="t bento-c">${glue(c, l).replace(/(\p{L}+-\p{L}+)/gu, '<i class="nw">$1</i>')}</span></li>`).join('\n')}
+${BENTO[l].map(([v, c], i) => `        <li class="bento-card b-${i + 1}${BPH[i + 1] ? ' is-photo' : ''}">${BPH[i + 1] ? `<picture><source media="(max-width:767px)" srcset="${R}assets/img/${BPH[i + 1]}-m.webp"><img src="${R}assets/img/${BPH[i + 1]}.webp" alt="" loading="lazy"></picture>` : ''}<b class="t bento-v">${v.replace(/ (\p{L}{1,2}) /gu, ' $1 ')}</b><span class="t bento-c">${glue(c, l).replace(/(\p{L}+-\p{L}+)/gu, '<i class="nw">$1</i>')}</span></li>`).join('\n')}
       </ul>
     </div>
   </section>
 
-  <section class="sec prj-sec" id="projects">
+
+  <section class="sec" id="now">
+    <div class="container">
+      <div class="sub">
+        <div class="sub-bg" aria-hidden="true"><span class="sub-blobs"><i></i><i></i><i></i><i></i><i></i></span><span class="sub-grain"></span></div>
+        <span class="sub-tag">${d.nw_tag}</span>
+        <h2 class="t h2">${d.nw_t}</h2>
+        <p class="t sub-p">${d.nw_p}</p>
+        <a class="btn btn-white sub-btn" href="https://unit.now">${d.nw_cta}</a>
+      </div>
+    </div>
+  </section>
+  <section class="sec prj-sec sec-last" id="projects">
     <div class="container">
       <h2 class="t h2">${d.prj_h2}</h2>
+      <p class="t prj-lead">${d.prj_lead}</p>
       <div class="prj-list">
 ${prj.map(([href, dom, img, h, title, k]) => `        <article class="prj">
           <div class="prj-photo prj-gal">
@@ -146,18 +159,6 @@ ${prj.map(([href, dom, img, h, title, k]) => `        <article class="prj">
             <a class="btn btn-blue" href="${href}">${d[k + '_cta']}</a>
           </div>
         </article>`).join('\n')}
-      </div>
-    </div>
-  </section>
-
-  <section class="sec sec-last" id="now">
-    <div class="container">
-      <div class="sub">
-        <div class="sub-bg" aria-hidden="true"><span class="sub-blobs"><i></i><i></i><i></i><i></i><i></i></span><span class="sub-grain"></span></div>
-        <span class="sub-tag">${d.nw_tag}</span>
-        <h2 class="t h2">${d.nw_t}</h2>
-        <p class="t sub-p">${d.nw_p}</p>
-        <a class="btn btn-white sub-btn" href="https://unit.now">${d.nw_cta}</a>
       </div>
     </div>
   </section>
