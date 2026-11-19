@@ -327,3 +327,4 @@ html{-webkit-tap-highlight-color:transparent}
 .b-1{background:#1a1a1a}
 @media (max-width:1023px){.bento{grid-auto-rows:minmax(240px,auto)}}
 @media (max-width:599px){.bento{grid-auto-rows:minmax(200px,auto)}}
+.sec[tabindex="-1"]:focus{outline:none}
