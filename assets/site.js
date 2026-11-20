@@ -149,22 +149,32 @@
       return { c: c, ax: box.left + parseFloat(cs.left), ay: box.top + parseFloat(cs.top), stem: (box.top + parseFloat(cs.top)) - r.bottom, w: r.width, h: r.height };
     }) };
   }
+  // десктоп: ножка не идёт через чужой чип, чип не лежит на чужой ножке или точке
+  var stems = [], dots = [];
+  function cross(kept, o, L, T, below) {
+    var x = o.ax, a = below ? o.ay : T + o.h, z = below ? T : o.ay, i, q;
+    for (i = 0; i < kept.length; i++) { q = kept[i]; if (x > q.l - 3 && x < q.r + 3 && a < q.b + 2 && z > q.t - 2) return true; }
+    for (i = 0; i < stems.length; i++) { q = stems[i]; if (q.o !== o && q.x > L - 4 && q.x < L + o.w + 4 && q.a < T + o.h + 2 && q.z > T - 2) return true; }
+    for (i = 0; i < dots.length; i++) { q = dots[i]; if (q.o !== o && q.x > L - 8 && q.x < L + o.w + 8 && q.y > T - 8 && q.y < T + o.h + 8) return true; }
+    return false;
+  }
   function inside(pr, L, T, w, h, m) { return L >= pr.left + m && L + w <= pr.right - m && T >= pr.top + m && T + h <= pr.bottom - m; }
   function clash(kept, L, T, w, h, gap) { return kept.some(function (q) { return L < q.r + gap && q.l < L + w + gap && T < q.b + gap && q.t < T + h + gap; }); }
   function put(o, best) {
     o.c.classList.toggle('is-below', !!best.below);
     o.c.style.setProperty('--lift', best.lift + 'px');
     o.c.style.setProperty('--dx', best.dx.toFixed(1) + 'px');
+    if (!phone.matches) stems.push({ o: o, x: o.ax, a: best.below ? o.ay : best.T + o.h, z: best.below ? best.T : o.ay });
     return { l: best.L, t: best.T, r: best.L + o.w, b: best.T + o.h };
   }
   // место для подписи: перебор вариантов, первый свободный
   function find(o, pr, kept, tries) {
-    var step = o.h + 4, lim = o.w / 2 - 7, dxs = [0, -o.w * .3, o.w * .3, -lim, lim];
+    var step = o.h + 4, lim = o.w / 2 - 7, dxs = [0, -o.w * .3, o.w * .3, -o.w * .15, o.w * .15, -lim, lim];
     for (var t = 0; t < tries.length; t++) {
       var below = tries[t][0], lift = tries[t][1] * step, T = below ? o.ay + o.stem + lift : o.ay - o.stem - lift - o.h;
       for (var k = 0; k < dxs.length; k++) {
         var L = o.ax - o.w / 2 + dxs[k];
-        if (inside(pr, L, T, o.w, o.h, 6) && !clash(kept, L, T, o.w, o.h, 4)) return { below: below, lift: lift, dx: dxs[k], L: L, T: T };
+        if (inside(pr, L, T, o.w, o.h, 6) && !clash(kept, L, T, o.w, o.h, 4) && !cross(kept, o, L, T, below)) return { below: below, lift: lift, dx: dxs[k], L: L, T: T };
       }
     }
     return null;
@@ -172,9 +182,10 @@
 
   function desktop() {
     var g = measure(), kept = [];
+    stems = []; dots = g.list.map(function (o) { return { o: o, x: o.ax, y: o.ay }; });
     g.list.forEach(function (o) {
       if (!o.w) return;
-      var best = find(o, g.pr, kept, [[0, 0], [0, 1], [1, 0], [0, 2], [1, 1], [0, 3], [1, 2], [0, 4], [0, 5], [1, 3]]);
+      var best = find(o, g.pr, kept, [[0, 0], [0, 1], [1, 0], [0, 2], [1, 1], [0, 3], [1, 2], [0, 4], [0, 5], [1, 3], [1, 4], [0, 6], [1, 5], [0, 7]]);
       if (!best) { o.c.classList.add('is-off'); return; }
       kept.push(put(o, best));
     });
@@ -183,7 +194,7 @@
   // телефон: места живут по одному — каждое гаснет и появляется в своё время, на экране до 5, без наложений
   var pool = [], vis = [], g0 = null, fixed = [], lastOff = null, short = [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2]];
   function mobile() {
-    g0 = measure(); fixed = []; pool = []; vis = [];
+    g0 = measure(); fixed = []; pool = []; vis = []; stems = []; dots = [];
     g0.list.forEach(function (o) {
       if (!o.w) return;
       if (isProj(o.c)) { var b = find(o, g0.pr, fixed, short); if (b) fixed.push(put(o, b)); return; }

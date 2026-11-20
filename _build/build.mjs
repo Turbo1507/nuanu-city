@@ -117,14 +117,14 @@ ${['hero', 'hero2', 'hero3'].map((h, i) => `      <div class="hero-slide${i ? ''
         <p class="t">${d.about_p}</p>
       </div>
       <ul class="bento">
-${BENTO[l].map(([v, c], i) => `        <li class="bento-card b-${i + 1}${BPH[i + 1] ? ' is-photo' : ''}">${BPH[i + 1] ? `<picture><source media="(max-width:767px)" srcset="${R}assets/img/${BPH[i + 1]}-m.webp"><img src="${R}assets/img/${BPH[i + 1]}.webp" alt="" loading="lazy"></picture>` : ''}<b class="t bento-v">${v.replace(/ (\p{L}{1,2}) /gu, ' $1 ')}</b><span class="t bento-c">${glue(c, l).replace(/(\p{L}+-\p{L}+)/gu, '<i class="nw">$1</i>')}</span></li>`).join('\n')}
-      </ul>
-      <div class="plan"><div class="plan-canvas">
+${BENTO[l].map(([v, c], i) => `        <li class="bento-card b-${i + 1}${BPH[i + 1] ? ' is-photo' : ''}">${BPH[i + 1] ? `<picture><source media="(max-width:767px)" srcset="${R}assets/img/${BPH[i + 1]}-m.webp"><img src="${R}assets/img/${BPH[i + 1]}.webp" alt="" loading="lazy"></picture>` : ''}<b class="t bento-v">${v.replace(/ (\p{L}{1,2}) /gu, ' $1 ')}</b><span class="t bento-c">${glue(c, l).replace(/(\p{L}+-\p{L}+)/gu, '<i class="nw">$1</i>')}</span></li>` + (i === 2 ? `
+        <li class="plan"><div class="plan-canvas">
         <picture><source media="(max-width:767px)" srcset="${R}assets/img/plan-m.webp" width="1120" height="1156"><img src="${R}assets/img/plan.webp" srcset="${R}assets/img/plan-s.webp 1200w, ${R}assets/img/plan.webp 2400w" sizes="(max-width:1599px) 100vw, 1600px" alt="${attr(plain(d.plan_alt))}" width="2400" height="1200" loading="lazy"></picture>
         <ul class="pchips" aria-label="${attr(PT[l].label)}">
 ${PINS.map(p => `          <li class="pchip" data-k="${p.k}" style="--x:${p.x};--y:${p.y};--mx:${p.mx};--my:${p.my}">${icon(p.k)}<span>${glue(PT[l][p.k], l)}</span></li>`).join('\n')}
         </ul>
-      </div></div>
+        </div></li>` : '')).join('\n')}
+      </ul>
     </div>
   </section>
 

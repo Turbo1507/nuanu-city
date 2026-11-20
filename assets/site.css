@@ -90,7 +90,7 @@ ul{list-style:none}
 .about{display:grid;align-items:start}
 .about .h2{text-wrap:balance;max-width:12em}
 .about p{--fs:clamp(18px,16.67px + .37vw,22px);--lh:clamp(23px,21.33px + .463vw,28px);--mt:24px;max-width:696px}
-.plan{margin-top:16px;border-radius:24px;overflow:clip;aspect-ratio:2/1;background:#cfd8d4}
+.plan{grid-column:1/-1;border-radius:24px;overflow:clip;aspect-ratio:2/1;background:#cfd8d4}
 .plan img{width:100%;height:100%;object-fit:cover}
 @media (min-width:1024px){.about p{max-width:none}}
 @media (min-width:1200px){
@@ -99,7 +99,7 @@ ul{list-style:none}
   .about .ln{display:block}
   .about p{--mt:0px;max-width:30em;flex:0 1 auto}
 }
-@media (max-width:599px){.plan{border-radius:16px;margin-top:8px}}
+@media (max-width:599px){.plan{border-radius:16px}}
 
 /* проекты: фото вписано в карточку, кнопка внизу */
 .prj-sec .h2{--mb:0px}
@@ -237,9 +237,10 @@ html{-webkit-tap-highlight-color:transparent}
 .plan-canvas img{position:absolute;inset:0}
 .pchips{position:absolute;inset:0;pointer-events:none}
 .pchip{--stem:clamp(10px,1.4cqw,20px);position:absolute;left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);transform:translate(calc(-50% + var(--dx,0px)),calc(-100% - var(--stem) - var(--lift,0px)));padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.92);color:var(--ink);font-size:clamp(11px,.95cqw,14px);font-weight:500;line-height:1.15;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.18)}
-/* иконка места: линия 2.4 из 24 при размере 1.15em = штрих буквы Helvetica Neue 500 (0.115em) */
-.pchip{display:flex;align-items:center;gap:.4em}
-.pi{flex:none;width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+/* иконка места: рисунок высотой с заглавную (0.715em с линией), стоит на базовой линии; линия 0.115em = штрих Helvetica Neue 500 */
+.pchip{display:flex;align-items:baseline;gap:.4em}
+.pi{flex:none;height:.6em;width:calc(.6em * var(--r));overflow:visible;margin:0 .0575em .0575em;fill:none;stroke:currentColor;stroke-width:.115em;stroke-linecap:round;stroke-linejoin:round}
+.pi *{vector-effect:non-scaling-stroke}
 .pchip::after{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:100%;width:1px;height:calc(var(--stem) + var(--lift,0px));background:rgba(255,255,255,.92)}
 .pchip::before{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:calc(100% + var(--stem) + var(--lift,0px) - 3px);width:6px;height:6px;margin-left:-2.5px;border-radius:50%;background:var(--white);box-shadow:0 0 0 2px rgba(0,0,0,.18)}
 /* подпись под точкой (JS ставит, если сверху налезает на соседнюю) */
@@ -290,7 +291,7 @@ html{-webkit-tap-highlight-color:transparent}
 .pchip.is-hid{opacity:0;visibility:hidden}
 @media (prefers-reduced-motion:reduce){.pchip{transition:none}}
 
-/* бенто о Нуану, под ним план тем же зазором, что между карточками: читаются одним блоком */
+/* бенто о Нуану; план вписан в сетку на всю ширину после первых трёх карточек */
 .bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:clamp(40px,32px + 2.222vw,64px)}
 .bento-card{display:flex;flex-direction:column;min-height:176px;padding:32px;border-radius:24px;background:var(--white)}
 .b-1,.b-6,.b-7,.b-8{grid-column:span 2}
