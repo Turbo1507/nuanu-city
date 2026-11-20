@@ -130,11 +130,11 @@
 })();
 
 // чипы плана. Десктоп: каждый ищет свободное место — над точкой, выше на длинной ножке, под точкой, со сдвигом.
-// Телефон (до 768): места появляются и гаснут по одному в случайное время, до 3 сразу, без наложений.
+// Телефон (до 768): места появляются и гаснут по одному в случайное время, до 5 сразу, без наложений.
 (function () {
   var plan = document.querySelector('.plan'); if (!plan) return;
   var chips = [].slice.call(plan.querySelectorAll('.pchip')), lastW = 0;
-  var P = ['luna', 'school', 'rest', 'aurora', 'gallery', 'retreat', 'cave', 'shop', 'alpaca'];
+  var P = ['luna', 'school', 'rest', 'aurora', 'gallery', 'retreat', 'cave', 'shop', 'alpaca', 'club', 'thk', 'music', 'beer', 'venue', 'wedding'];
   var isProj = function (c) { return c.classList.contains('pchip-unit') || c.classList.contains('pchip-bso'); };
   var rank = function (c) { return isProj(c) ? -1 : P.indexOf(c.dataset.k); };
   var order = chips.slice().sort(function (a, b) { return rank(a) - rank(b); });
@@ -180,7 +180,7 @@
     });
   }
 
-  // телефон: места живут по одному — каждое гаснет и появляется в своё время, на экране до 3, без наложений
+  // телефон: места живут по одному — каждое гаснет и появляется в своё время, на экране до 5, без наложений
   var pool = [], vis = [], g0 = null, fixed = [], lastOff = null, short = [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2]];
   function mobile() {
     g0 = measure(); fixed = []; pool = []; vis = [];
@@ -204,8 +204,8 @@
   }
   function hideOne() { var v = vis.shift(); if (v) { v.o.c.classList.add('is-hid'); lastOff = v.o; } }
   function step() {
-    // чаще гасим, когда меток уже 3; иногда гасим и при двух, чтобы ритм не повторялся
-    if (vis.length >= 3 || (vis.length > 1 && Math.random() < .3)) hideOne(); else if (!showOne()) hideOne();
+    // чаще гасим, когда меток уже 5; иногда гасим и при четырёх, чтобы ритм не повторялся
+    if (vis.length >= 5 || (vis.length > 3 && Math.random() < .3)) hideOne(); else if (!showOne()) hideOne();
     timer = setTimeout(step, 600 + Math.random() * 1200);
   }
   // десктоп: при первом показе плана метки проявляются вразнобой
@@ -223,7 +223,7 @@
     clearTimeout(timer); timer = 0;
     if (seen) reveal();
     if (!phone.matches || !g0) return;
-    if (still) { while (vis.length < 3 && showOne()); return; }
+    if (still) { while (vis.length < 5 && showOne()); return; }
     if (document.hidden || !seen) return;
     timer = setTimeout(step, 300 + Math.random() * 500);
   }

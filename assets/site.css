@@ -237,6 +237,9 @@ html{-webkit-tap-highlight-color:transparent}
 .plan-canvas img{position:absolute;inset:0}
 .pchips{position:absolute;inset:0;pointer-events:none}
 .pchip{--stem:clamp(10px,1.4cqw,20px);position:absolute;left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);transform:translate(calc(-50% + var(--dx,0px)),calc(-100% - var(--stem) - var(--lift,0px)));padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.92);color:var(--ink);font-size:clamp(11px,.95cqw,14px);font-weight:500;line-height:1.15;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.18)}
+/* иконка места: линия 2.4 из 24 при размере 1.15em = штрих буквы Helvetica Neue 500 (0.115em) */
+.pchip{display:flex;align-items:center;gap:.4em}
+.pi{flex:none;width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .pchip::after{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:100%;width:1px;height:calc(var(--stem) + var(--lift,0px));background:rgba(255,255,255,.92)}
 .pchip::before{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:calc(100% + var(--stem) + var(--lift,0px) - 3px);width:6px;height:6px;margin-left:-2.5px;border-radius:50%;background:var(--white);box-shadow:0 0 0 2px rgba(0,0,0,.18)}
 /* подпись под точкой (JS ставит, если сверху налезает на соседнюю) */

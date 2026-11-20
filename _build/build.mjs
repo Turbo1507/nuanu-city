@@ -11,6 +11,7 @@ import { NOW } from './i18n-now.mjs';
 import { BENTO } from './i18n-bento.mjs';
 import { CAPS, GAL, ARR } from './caps.mjs';
 import { PINS, PT } from './plan.mjs';
+import { icon } from './icons.mjs';
 
 // выбор языка по куки: отдельным файлом, чтобы CSP обходилась без inline-скриптов
 const REDIR = `(function(){var L=/^(${LANGS.join('|')})$/;if(/bot|crawl|spider|slurp|lighthouse|headless|preview/i.test(navigator.userAgent))return;var w=(location.search.match(/[?&]lang=([a-z]{2})/)||[])[1];if(!w){var m=document.cookie.match(/(?:^|;\\s*)unit_lang=([a-z]{2})/);w=m&&m[1]}if(!w||w==='en'||!L.test(w))return;location.replace(location.pathname.replace(/[^/]*$/,'')+w+'/'+location.hash)})();`;
@@ -121,7 +122,7 @@ ${BENTO[l].map(([v, c], i) => `        <li class="bento-card b-${i + 1}${BPH[i +
       <div class="plan"><div class="plan-canvas">
         <picture><source media="(max-width:767px)" srcset="${R}assets/img/plan-m.webp" width="1120" height="1156"><img src="${R}assets/img/plan.webp" srcset="${R}assets/img/plan-s.webp 1200w, ${R}assets/img/plan.webp 2400w" sizes="(max-width:1599px) 100vw, 1600px" alt="${attr(plain(d.plan_alt))}" width="2400" height="1200" loading="lazy"></picture>
         <ul class="pchips" aria-label="${attr(PT[l].label)}">
-${PINS.map(p => `          <li class="pchip" data-k="${p.k}" style="--x:${p.x};--y:${p.y};--mx:${p.mx};--my:${p.my}">${glue(PT[l][p.k], l)}</li>`).join('\n')}
+${PINS.map(p => `          <li class="pchip" data-k="${p.k}" style="--x:${p.x};--y:${p.y};--mx:${p.mx};--my:${p.my}">${icon(p.k)}<span>${glue(PT[l][p.k], l)}</span></li>`).join('\n')}
         </ul>
       </div></div>
     </div>
