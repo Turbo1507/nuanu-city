@@ -90,7 +90,7 @@ ul{list-style:none}
 .about{display:grid;align-items:start}
 .about .h2{text-wrap:balance;max-width:12em}
 .about p{--fs:clamp(18px,16.67px + .37vw,22px);--lh:clamp(23px,21.33px + .463vw,28px);--mt:24px;max-width:696px}
-.plan{margin-top:clamp(40px,32px + 2.222vw,64px);border-radius:24px;overflow:clip;aspect-ratio:2/1;background:#cfd8d4}
+.plan{margin-top:16px;border-radius:24px;overflow:clip;aspect-ratio:2/1;background:#cfd8d4}
 .plan img{width:100%;height:100%;object-fit:cover}
 @media (min-width:1024px){.about p{max-width:none}}
 @media (min-width:1200px){
@@ -99,10 +99,10 @@ ul{list-style:none}
   .about .ln{display:block}
   .about p{--mt:0px;max-width:30em;flex:0 1 auto}
 }
-@media (max-width:599px){.plan{border-radius:16px}}
+@media (max-width:599px){.plan{border-radius:16px;margin-top:8px}}
 
 /* проекты: фото вписано в карточку, кнопка внизу */
-.prj-sec .h2{--mb:0}
+.prj-sec .h2{--mb:0px}
 .prj-lead{--fs:clamp(18px,16.67px + .37vw,22px);--lh:clamp(23px,21.33px + .463vw,28px);--mt:24px;--mb:clamp(40px,32px + 2.222vw,64px);color:var(--ink-2);max-width:40em}
 .prj-list{display:grid;gap:24px}
 .prj{display:flex;flex-direction:column;align-items:stretch;background:var(--white);border-radius:24px;padding:8px 8px 32px}
@@ -162,7 +162,7 @@ ul{list-style:none}
 .form-note{font-size:14px;line-height:18px}
 .form-note:not(:empty){margin-top:16px}
 @media (max-width:599px){
-  .sub{padding:40px 24px;border-radius:16px}
+  .sub{padding:32px 24px;border-radius:16px}
   .form{flex-direction:column;width:100%}
   .form input{flex:none}
   .form .btn{width:100%}
@@ -231,7 +231,7 @@ html{-webkit-tap-highlight-color:transparent}
 @media (max-width:599px){.hero-dots{display:none}}
 @media (prefers-reduced-motion:reduce){.hero-slide,.hero-cap{transition:none}}
 
-/* локации на мастер-плане: координаты как на сайте UNIT. Space City; чип над точкой со стеблем; UNIT. Space City синим */
+/* локации на мастер-плане: координаты как на сайте UNIT. Space City; чип над точкой со стеблем */
 .plan{position:relative}
 .plan-canvas{position:absolute;inset:0;container-type:inline-size}
 .plan-canvas img{position:absolute;inset:0}
@@ -239,10 +239,6 @@ html{-webkit-tap-highlight-color:transparent}
 .pchip{--stem:clamp(10px,1.4cqw,20px);position:absolute;left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);transform:translate(calc(-50% + var(--dx,0px)),calc(-100% - var(--stem) - var(--lift,0px)));padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.92);color:var(--ink);font-size:clamp(11px,.95cqw,14px);font-weight:500;line-height:1.15;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.18)}
 .pchip::after{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:100%;width:1px;height:calc(var(--stem) + var(--lift,0px));background:rgba(255,255,255,.92)}
 .pchip::before{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:calc(100% + var(--stem) + var(--lift,0px) - 3px);width:6px;height:6px;margin-left:-2.5px;border-radius:50%;background:var(--white);box-shadow:0 0 0 2px rgba(0,0,0,.18)}
-.pchip-unit{background:var(--blue);color:var(--white)}
-/* Black Sands Oasis — чёрный, как флаг на unitdeveloper.com */
-.pchip-bso{background:#131313;color:var(--white)}
-.pchip-bso::after{background:#131313}.pchip-bso::before{background:#131313;box-shadow:0 0 0 2px rgba(255,255,255,.5)}
 /* подпись под точкой (JS ставит, если сверху налезает на соседнюю) */
 .pchip.is-below{transform:translate(calc(-50% + var(--dx,0px)),calc(var(--stem) + var(--lift,0px)))}
 .pchip.is-below::after{top:auto;bottom:100%}
@@ -291,8 +287,8 @@ html{-webkit-tap-highlight-color:transparent}
 .pchip.is-hid{opacity:0;visibility:hidden}
 @media (prefers-reduced-motion:reduce){.pchip{transition:none}}
 
-/* бенто о Нуану под планом: тот же зазор, что между карточками, план и карточки читаются одним блоком */
-.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:16px}
+/* бенто о Нуану, под ним план тем же зазором, что между карточками: читаются одним блоком */
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:clamp(40px,32px + 2.222vw,64px)}
 .bento-card{display:flex;flex-direction:column;min-height:176px;padding:32px;border-radius:24px;background:var(--white)}
 .b-1,.b-6,.b-7,.b-8{grid-column:span 2}
 .b-1{background:var(--blue);color:var(--white)}
@@ -309,7 +305,7 @@ html{-webkit-tap-highlight-color:transparent}
   .b-1,.b-8{grid-column:span 2}
 }
 @media (max-width:599px){
-  .bento{gap:8px;margin-top:8px}
+  .bento{gap:8px}
   .bento-card{min-height:0;padding:24px 16px;border-radius:16px}
   .bento-c{--fs:14px;--lh:18px;--mt:16px}
 }
